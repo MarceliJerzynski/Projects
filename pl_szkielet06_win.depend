@@ -1,5 +1,5 @@
 # depslib dependency file v1.0
-1560121043 source:c:\users\marceli\downloads\pl_szkielet06_win\pl_szkielet06_win\car.cpp
+1560998089 source:c:\users\marceli\downloads\pl_szkielet06_win\pl_szkielet06_win\car.cpp
 	"Car.h"
 
 1560120874 c:\users\marceli\downloads\pl_szkielet06_win\pl_szkielet06_win\car.h
@@ -923,7 +923,7 @@
 1559604224 c:\users\marceli\downloads\pl_szkielet06_win\pl_szkielet06_win\glm\gtc\type_ptr.inl
 	<cstring>
 
-1560120874 c:\users\marceli\downloads\pl_szkielet06_win\pl_szkielet06_win\object.h
+1560998089 c:\users\marceli\downloads\pl_szkielet06_win\pl_szkielet06_win\object.h
 	<GL/glew.h>
 	<GLFW/glfw3.h>
 	<glm/glm.hpp>
@@ -957,7 +957,7 @@
 	<iostream>
 	"lodepng.h"
 
-1560123625 source:c:\users\marceli\downloads\pl_szkielet06_win\pl_szkielet06_win\main_file.cpp
+1561049581 source:c:\users\marceli\downloads\pl_szkielet06_win\pl_szkielet06_win\main_file.cpp
 	<GL/glew.h>
 	<GLFW/glfw3.h>
 	<glm/glm.hpp>
@@ -968,15 +968,24 @@
 	"Object.h"
 	"Car.h"
 	"OBJLoader.h"
+	"Markup.h"
 
 1559604218 c:\users\marceli\downloads\pl_szkielet06_win\pl_szkielet06_win\constants.h
 
-1560121107 source:c:\users\marceli\downloads\pl_szkielet06_win\pl_szkielet06_win\object.cpp
+1560995819 source:c:\users\marceli\downloads\pl_szkielet06_win\pl_szkielet06_win\object.cpp
 	"Object.h"
 
-1559921060 source:c:\users\marceli\downloads\pl_szkielet06_win\pl_szkielet06_win\objloader.cpp
+1560998151 source:c:\users\marceli\downloads\pl_szkielet06_win\pl_szkielet06_win\objloader.cpp
 	"OBJLoader.h"
 
 1559604218 source:c:\users\marceli\downloads\pl_szkielet06_win\pl_szkielet06_win\shaderprogram.cpp
 	"shaderprogram.h"
+
+1560996648 source:c:\users\marceli\downloads\pl_szkielet06_win\pl_szkielet06_win\src\markup.cpp
+	"Markup.h"
+
+1560996676 c:\users\marceli\downloads\pl_szkielet06_win\pl_szkielet06_win\include\markup.h
+	"Object.h"
+	"Car.h"
+	<iostream>
 

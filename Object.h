@@ -18,8 +18,7 @@ class Object
 {
     public:
         Object();
-        void loadFromPath(string path,
-               vec3 position, float rotX, float rotY, float rotZ, float scale);
+        void loadFromPath(string path, vec3 position, float rotX, float rotY, float rotZ, float scale);
         void loadFromLoader(OBJLoader loader, vec3 position, float rotX, float rotY, float rotZ, float scale);
         mat4 getM();
         float * getVerts();
@@ -31,6 +30,8 @@ class Object
         void turn(float rot);
         void move(float dc);
         void render(mat4 V, mat4 P, ShaderProgram *sp);
+        void setM(vec3 aposition, float rotX, float rotY, float rotZ, float scale);
+
     protected:
 
         mat4 M;

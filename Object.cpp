@@ -9,35 +9,21 @@ void Object::loadFromPath(string path,vec3 aposition, float rotX, float rotY, fl
     OBJLoader loader;
     loader.load(path);
     position = aposition;
-    M=mat4(1.0f);
-    M=translate(M, position);
-    M=rotate(M, rotX*3.14f/180.0f, vec3(1.0f, 0.0f, 0.0f));
-    M=rotate(M, rotY*3.14f/180.0f, vec3(0.0f, 1.0f, 0.0f));
-    M=rotate(M, rotZ*3.14f/180.0f, vec3(0.0f, 0.0f, 1.0f));
-    M=scale(M, vec3(ascale, ascale, ascale));
+    setM(aposition, rotX, rotY, rotZ, ascale);
     verts = loader.getVerts();
     normals = loader.getNormals();
     colors = loader.getColors();
     vertexCount = loader.getVertexCount();
-    rotation = rotY;
-    scaling=ascale;
 }
 
-void Object::loadFromLoader(OBJLoader loader, vec3 aposition, float rotX, float rotY, float rotZ, float a scale)
+void Object::loadFromLoader(OBJLoader loader, vec3 aposition, float rotX, float rotY, float rotZ, float ascale)
 {
     position = aposition;
-    M=mat4(1.0f);
-    M=translate(M, position);
-    M=rotate(M, rotX*3.14f/180.0f, vec3(1.0f, 0.0f, 0.0f));
-    M=rotate(M, rotY*3.14f/180.0f, vec3(0.0f, 1.0f, 0.0f));
-    M=rotate(M, rotZ*3.14f/180.0f, vec3(0.0f, 0.0f, 1.0f));
-    M=scale(M, vec3(ascale, ascale, ascale));
+    setM(aposition, rotX, rotY, rotZ, ascale);
     verts = loader.getVerts();
     normals = loader.getNormals();
     colors = loader.getColors();
     vertexCount = loader.getVertexCount();
-    rotation = rotY;
-    scaling=ascale;
 }
 
 mat4 Object::getM()
@@ -128,4 +114,17 @@ void Object::sendAttributes(float *verts, float *normals, float *colors, ShaderP
 
     glEnableVertexAttribArray(sp->a("color"));  //W³¹cz przesy³anie danych do atrybutu color
     glVertexAttribPointer(sp->a("color"),4,GL_FLOAT,false,0,colors); //Wska¿ tablicê z danymi dla atrybutu color
+}
+
+void Object::setM(vec3 aposition, float rotX, float rotY, float rotZ, float ascale)
+{
+    position = aposition;
+    M=mat4(1.0f);
+    M=translate(M, position);
+    M=rotate(M, rotX*3.14f/180.0f, vec3(1.0f, 0.0f, 0.0f));
+    M=rotate(M, rotY*3.14f/180.0f, vec3(0.0f, 1.0f, 0.0f));
+    M=rotate(M, rotZ*3.14f/180.0f, vec3(0.0f, 0.0f, 1.0f));
+    M=scale(M, vec3(ascale, ascale, ascale));
+    rotation = rotY;
+    scaling=ascale;
 }

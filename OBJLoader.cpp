@@ -7,6 +7,8 @@ OBJLoader::OBJLoader()
 
 void OBJLoader:: load(string path)
 {
+//Deklaracje
+//----------------------------------------------------------------------------------------------------------------------
     vector<float> not_nice_verts;
     vector<float> not_nice_normals;
     vector<float> not_nice_colors;
@@ -22,10 +24,13 @@ void OBJLoader:: load(string path)
     unsigned int helping_variable[9];
     FILE * file = fopen(path.c_str(), "r");
 
+//----------------------------------------------------------------------------------------------------------------------
+
     if( file == NULL )
     {
     cout<<"Couldn't load the file:" << path<<endl;
     }
+
     else
     {
         while(true)
@@ -41,7 +46,6 @@ void OBJLoader:: load(string path)
                 not_nice_verts.push_back(fscaning_variable[1]);
                 not_nice_verts.push_back(fscaning_variable[2]);
                 not_nice_verts.push_back(1.0f);
-            //    cout<<"v : "<<fscaning_variable[0] << " " <<  fscaning_variable[1] << " " << fscaning_variable[2] << endl;
             } /*else if ( strcmp( word, "vt" ) == 0 )
             {
                 fscanf(file, "%f %f \n", &fscaning_variable[0], &fscaning_variable[1] );
@@ -51,7 +55,7 @@ void OBJLoader:: load(string path)
             {
                 nn++;
                 fscanf(file, "%f %f %f\n", &fscaning_variable[0], &fscaning_variable[1], &fscaning_variable[2]  );
-             //   cout<<"n : "<<fscaning_variable[0] << " " <<  fscaning_variable[1] << " " << fscaning_variable[2] << endl;
+
                 not_nice_normals.push_back(fscaning_variable[0]);
                 not_nice_normals.push_back(fscaning_variable[1]);
                 not_nice_normals.push_back(fscaning_variable[2]);
@@ -79,27 +83,22 @@ void OBJLoader:: load(string path)
 
             }
         }
-        verts = new float[order_verts.size()*4];
-        normals=new float[order_normals.size()*4];
-        colors =new float[vertexCount*4];
-        cout <<"nv: " << order_verts.size() << endl;
-        cout <<"nn: " << order_normals.size()<< endl;
-        cout<<"vertexCount: "<<vertexCount << endl;
-        cout<<"verts:"<<endl;
+
+
+    verts = new float[order_verts.size()*4];
+    normals=new float[order_normals.size()*4];
+    colors =new float[vertexCount*4];
+
         for( int i=0; i<order_verts.size(); i++ )
         {
              verts[i*4] = not_nice_verts[((order_verts[i]-1)*4)+0];
- //   cout<<verts[i]<<"f, ";
- //cout <<not_nice_verts[((order_verts[i]-1)*4)+0]<<"f, ";
+
              verts[i*4+1] = not_nice_verts[((order_verts[i]-1)*4)+1];
- //   cout<<verts[i+1]<<"f, ";
- //cout <<not_nice_verts[((order_verts[i]-1)*4)+1]<<"f, ";
+
              verts[i*4+2] = not_nice_verts[((order_verts[i]-1)*4)+2];
- //   cout<<verts[i+2]<<"f, ";
- //cout <<not_nice_verts[((order_verts[i]-1)*4)+2]<<"f, ";
+
              verts[i*4+3] = not_nice_verts[((order_verts[i]-1)*4)+3];
- //   cout<<verts[i+3]<<"f, "<<endl;
-// cout <<not_nice_verts[((order_verts[i]-1)*4)+3]<<"f, "<<endl;
+
  }
         for( int i=0; i<order_normals.size(); i++)
         {
@@ -107,6 +106,11 @@ void OBJLoader:: load(string path)
              normals[i*4+1] = not_nice_normals[((order_normals[i]-1)*4)+1];
              normals[i*4+2] = not_nice_normals[((order_normals[i]-1)*4)+2];
              normals[i*4+3] = not_nice_normals[((order_normals[i]-1)*4)+3];
+        }
+
+        for( int i = 0;i < vertexCount*4; i++)
+        {
+            colors[i] = 0.5;
         }
 
 
@@ -136,8 +140,8 @@ float * OBJLoader::getNormals()
 
 float * OBJLoader::getColors()
 {
-    //return colors;
-    return verts;
+    return colors;
+    //return verts;
 }
 unsigned int OBJLoader::getVertexCount()
 {

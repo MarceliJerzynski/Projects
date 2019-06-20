@@ -7,6 +7,8 @@ Car::Car()
 void Car::loadFromPath(string pathBody,string pathFLW,string pathFRW,string pathRLW,string pathRRW, float apower, float abpower,vec3 aposition,
          float rotX, float rotY, float rotZ, float ascale)
 {
+//Ladowanie poszczegolnych obiektow
+//----------------------------------------------------------------------------------------------------------------------
     body=new Object();
     body->loadFromPath(pathBody,aposition, rotX,rotY,rotZ,ascale);
 
@@ -22,6 +24,12 @@ void Car::loadFromPath(string pathBody,string pathFLW,string pathFRW,string path
     RRW =new Object();
     RRW->loadFromPath(pathRRW, aposition, rotX, rotY,rotZ,ascale);
 
+//----------------------------------------------------------------------------------------------------------------------
+
+
+
+//Ustalanie wartosci poczatkowych
+//----------------------------------------------------------------------------------------------------------------------
     wheel_angle = 0;
     Power = apower;
     temporaryPower = 0;
@@ -30,6 +38,7 @@ void Car::loadFromPath(string pathBody,string pathFLW,string pathFRW,string path
     a = 0;
     goForward = false;
     goBackward = false;
+//----------------------------------------------------------------------------------------------------------------------
 }
 
 vec3 Car::getPosition()
@@ -60,13 +69,19 @@ int Car::isMoving()
 }
 
 void Car::move(int going)
+//going = 1 <- gracz naciska W
+//going = 2 <- gracz naciska S
+//going = 0 <- gracz nie trzyma nic
 {
+
     if ( going == 1 )
     {   if (temporaryPower < 1)
             temporaryPower += Power;
         else
             temporaryPower = 1;
     }
+
+
     else
     if (going == 2 )
     {
@@ -75,15 +90,24 @@ void Car::move(int going)
         else
             temporaryPower = -0.5;
     }
+
+
     else
     {
        temporaryPower = 0;
     }
+
+
     float resistance = v/3*2;
+    if (going == 0)
+    {
+        resistance = resistance*3;
+    }
+
+
     a = temporaryPower - resistance;
     v = v + a/60;
     float s = v;
-    cout<<v<<endl;
     body->move(s);
     FLW->move(s);
     FRW->move(s);

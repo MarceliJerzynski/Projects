@@ -31,7 +31,7 @@ Place, Fifth Floor, Boston, MA  02110 - 1301  USA
 #include "Object.h"
 #include "Car.h"
 #include "OBJLoader.h"
-
+#include "Markup.h"
 using namespace glm;
 using namespace std;
 const int WIDTH = 800;
@@ -44,7 +44,7 @@ const int FPS = 60;
 const float max_angle = 90;
 const float changing_angle = 0.15;
 
-float distance_to_player = 15;
+float distance_to_player = 9;
 float pitch_angle = 15;
 float yaw_angle = 0;
 
@@ -141,24 +141,41 @@ void setCamera(mat4 &V, Car player)
 
 
 //Procedura rysująca zawartość sceny
-void drawScene(GLFWwindow* window,mat4 &V, mat4 &P, Object &cube, Car &player, Object tree[200]) {
-    //void drawScene(GLFWwindow* window, mat4 P) {
-	//************Tutaj umieszczaj kod rysujący obraz******************l
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+void drawScene(GLFWwindow* window,mat4 &V, mat4 &P, Object &cube, Car &player, Object tree[20], Markup &markup) {
 
-    sp->use();//Aktywacja programu cieniującego
-    //Przeslij parametry programu cieniującego do karty graficznej
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    sp->use();
+
+//Swiatla
+//----------------------------------------------------------------------------------------------------------------------
     vec3 light_position = vec3(0,500,0);
     glUniform4f(sp->u("lp"),light_position.x,light_position.y,light_position.z,1); //Współrzędne źródła światła
+//----------------------------------------------------------------------------------------------------------------------
 
+
+//Renderowanie obiektów
+//----------------------------------------------------------------------------------------------------------------------
     player.render(V, P, sp);
     cube.render(V, P, sp);
+    markup.getArrow().render(V, P, sp);
 
-    for(int i = 0 ; i < 200; i++)
+    for(int i = 0 ; i < 20; i++)
     {
-    //    tree[i].render(V, P, sp);
+        tree[i].render(V, P, sp);
+    }
+//----------------------------------------------------------------------------------------------------------------------
+
+   if ( markup.touched(player))
+    {
+       markup.changePosition(vec3(0,0,markup.getPosition().z-10));
     }
 
+
+    glfwSwapBuffers(window); //Przerzuć tylny bufor na przedni
+}
+
+void moving(mat4 &V,  Car &player)
+{
     bool camera_back = true;
     if (goPlayer)       //jesli trzyma W
     {
@@ -243,18 +260,15 @@ void drawScene(GLFWwindow* window,mat4 &V, mat4 &P, Object &cube, Car &player, O
 
 
     setCamera(V, player);
-
-    glfwSwapBuffers(window); //Przerzuć tylny bufor na przedni
 }
 
-
-int main(void)
+GLFWwindow* openGlstuff()
 {
-	GLFWwindow* window; //Wskaźnik na obiekt reprezentujący okno
+    GLFWwindow* window;
 
-	glfwSetErrorCallback(error_callback);//Zarejestruj procedurę obsługi błędów
+    glfwSetErrorCallback(error_callback);
 
-	if (!glfwInit()) { //Zainicjuj bibliotekę GLFW
+    if (!glfwInit()) { //Zainicjuj bibliotekę GLFW
 		fprintf(stderr, "Nie można zainicjować GLFW.\n");
 		exit(EXIT_FAILURE);
 	}
@@ -276,8 +290,19 @@ int main(void)
 		exit(EXIT_FAILURE);
 	}
 
-	initOpenGLProgram(window); //Operacje inicjujące
+	initOpenGLProgram(window);
 
+	return window;
+}
+
+int main(void)
+{
+	GLFWwindow* window; //Wskaźnik na obiekt reprezentujący okno
+    window = openGlstuff();
+
+
+//Tworzenie obiektów
+//----------------------------------------------------------------------------------------------------------------------
 	Car player;
     player.loadFromPath("BODY.obj", "FLW.obj", "FRW.obj","RLW.obj","RRW.obj",0.01,0.05 ,vec3(0.0f,0.0f,10.0f), 0.0f,0.0f,0.0f,1.0f);
 
@@ -287,31 +312,45 @@ int main(void)
     OBJLoader loader;
     loader.load("Tree.obj");
 
-    Object tree[200];
+    Object tree[20];
     int i = 0;
-    for(i = 0 ; i < 200; i++)
+    for(i = 0 ; i < 20; i++)
     {
-        tree[i].loadFromLoader(loader, vec3(5*i,0,10*i), 0,0,0,2);
+        tree[i].loadFromLoader(loader, vec3(5*i,0,20*i), 0,0,0,2);
     }
 
+    Markup markup(vec3(0,0,-10), 0.2);
+
+//----------------------------------------------------------------------------------------------------------------------
+
+//macierze P i V
+//----------------------------------------------------------------------------------------------------------------------
     mat4 P=perspective(50.0f*PI/180.0f, aspectRatio, 0.01f, 500.0f); //Wylicz macierz rzutowania
     mat4 V = mat4(1.0f);
+//----------------------------------------------------------------------------------------------------------------------
 
     setCamera(V, player);
-
 	glfwSetTime(0); //Zeruj timer
+
+//Pętla główna gry
+//----------------------------------------------------------------------------------------------------------------------
 	while (!glfwWindowShouldClose(window)) //Tak długo jak okno nie powinno zostać zamknięte
 	{
         glfwSetTime(0); //Zeruj timer
-		drawScene(window, V, P, cube, player, tree); //Wykonaj procedurę rysującą
-
-		glfwPollEvents(); //Wykonaj procedury callback w zalezności od zdarzeń jakie zaszły.
-		//while(glfwGetTime() < 1/FPS) {}
+		drawScene(window, V, P, cube, player, tree, markup); //Wykonaj procedurę rysującą
+        moving(V, player);                                   //wykonaj procedurę odpowiajająca za poruszanie graczem oraz kamerą
+		glfwPollEvents();                                    //Wykonaj procedury callback w zalezności od zdarzeń jakie zaszły.
+		while(glfwGetTime() < 1/FPS) {}                      //Zapewnij stałe 60FPS
 	}
+//----------------------------------------------------------------------------------------------------------------------
 
+
+//Popierdółki
+//----------------------------------------------------------------------------------------------------------------------
 	freeOpenGLProgram(window);
 
 	glfwDestroyWindow(window); //Usuń kontekst OpenGL i okno
 	glfwTerminate(); //Zwolnij zasoby zajęte przez GLFW
 	exit(EXIT_SUCCESS);
+//----------------------------------------------------------------------------------------------------------------------
 }
