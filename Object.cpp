@@ -93,6 +93,7 @@ void Object::setRotation(float rotX, float rotY, float rotZ)
 void Object::render(mat4 V, mat4 P, ShaderProgram *sp)
 {
     UniformAllMatrix4(M,V, P, sp);
+    sendTexture(sp);
     sendAttributes(verts,normals,colors, sp);
     glDrawArrays(GL_TRIANGLES,0,vertexCount); //Narysuj obiekt
     disableAttributes(sp);
@@ -105,11 +106,18 @@ void Object::UniformAllMatrix4(mat4 M,mat4 V, mat4 P, ShaderProgram *sp)
     glUniformMatrix4fv(sp->u("M"),1,false,value_ptr(M));
 }
 
+void Object::sendTexture(ShaderProgram *sp)
+{
+    glUniform1i(sp->u("textureMap"),0);
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_2D,tex);
+}
+
 void Object::disableAttributes(ShaderProgram *sp)
 {
     glDisableVertexAttribArray(sp->a("vertex"));  //Wy³¹cz przesy³anie danych do atrybutu vertex
     glDisableVertexAttribArray(sp->a("normal"));  //Wy³¹cz przesy³anie danych do atrybutu normal
-    glDisableVertexAttribArray(sp->a("color"));  //Wy³¹cz przesy³anie danych do atrybutu color
+    glDisableVertexAttribArray(sp->a("texCoord"));  //Wy³¹cz przesy³anie danych do atrybutu color
 }
 
 void Object::sendAttributes(float *verts, float *normals, float *colors, ShaderProgram *sp)
@@ -120,8 +128,8 @@ void Object::sendAttributes(float *verts, float *normals, float *colors, ShaderP
     glEnableVertexAttribArray(sp->a("normal"));  //W³¹cz przesy³anie danych do atrybutu normal
     glVertexAttribPointer(sp->a("normal"),4,GL_FLOAT,false,0,normals); //Wska¿ tablicê z danymi dla atrybutu normal
 
-    glEnableVertexAttribArray(sp->a("color"));  //W³¹cz przesy³anie danych do atrybutu color
-    glVertexAttribPointer(sp->a("color"),4,GL_FLOAT,false,0,colors); //Wska¿ tablicê z danymi dla atrybutu color
+    glEnableVertexAttribArray(sp->a("texCoord"));  //Włącz przesyłanie danych do atrybutu texCoord0
+    glVertexAttribPointer(sp->a("texCoord"),2,GL_FLOAT,false,0,colors); //Wskaż tablicę z danymi dla atrybutu texCoord0
 }
 
 void Object::setM(vec3 aposition, float rotX, float rotY, float rotZ, float ascale)

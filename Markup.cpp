@@ -23,7 +23,7 @@ void Markup::loadMarkup( float scale)
     position = track[0];
     index = 0;
     scaling = scale;
-    radius = 40*scale;
+    radius = 20*scale;
 }
 
 Object *Markup::getArrow()

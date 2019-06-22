@@ -40,7 +40,7 @@ class Object
         void sendAttributes(float *verts, float *normals, float *colors, ShaderProgram *sp);
         void disableAttributes(ShaderProgram *sp);
         void UniformAllMatrix4(mat4 M,mat4 V, mat4 P, ShaderProgram *sp);
-
+        void sendTexture(ShaderProgram *sp);
 
         mat4 M;
         float *verts;

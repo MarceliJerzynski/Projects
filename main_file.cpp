@@ -328,10 +328,10 @@ int main(void)
 //Tworzenie obiektów
 //----------------------------------------------------------------------------------------------------------------------
 	Car player;
-    player.loadFromPath("BODY.obj", "wheel.obj","bricks.png","bricks.png", 0.01,0.05 ,vec3(0.0f,0.0f,10.0f), 0.0f,0.0f,0.0f,1.0f);
+    player.loadFromPath("BODY.obj", "wheel.obj","bricks.png","texWheel.png", 0.01,0.05 ,vec3(0.0f,0.0f,10.0f), 0.0f,0.0f,0.0f,1.0f);
     player.getMarkup()->loadMarkup(0.2);
     Object cube;
-    cube.loadFromPath("track.obj","bricks.png", vec3(0.0f,-10.0f,0.0f), -90.0f, 0.0f, 0.0f, 1.0f);
+    cube.loadFromPath("cube.obj","bricks.png", vec3(0.0f,0.0f,0.0f), -90.0f, 0.0f, 0.0f, 1.0f);
 
     OBJLoader loader;
     loader.load("Tree.obj");

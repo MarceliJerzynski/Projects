@@ -46,12 +46,12 @@ void OBJLoader:: load(string path)
                 not_nice_verts.push_back(fscaning_variable[1]);
                 not_nice_verts.push_back(fscaning_variable[2]);
                 not_nice_verts.push_back(1.0f);
-            } /*else if ( strcmp( word, "vt" ) == 0 )
+            } else if ( strcmp( word, "vt" ) == 0 )
             {
                 fscanf(file, "%f %f \n", &fscaning_variable[0], &fscaning_variable[1] );
                 not_nice_colors.push_back(fscaning_variable[0]);
                 not_nice_colors.push_back(fscaning_variable[1]);
-            }*/ else if ( strcmp( word, "vn" ) == 0 )
+            } else if ( strcmp( word, "vn" ) == 0 )
             {
                 nn++;
                 fscanf(file, "%f %f %f\n", &fscaning_variable[0], &fscaning_variable[1], &fscaning_variable[2]  );
@@ -87,7 +87,7 @@ void OBJLoader:: load(string path)
 
     verts = new float[order_verts.size()*4];
     normals=new float[order_normals.size()*4];
-    colors =new float[order_colors.size()*4];
+    colors =new float[order_colors.size()*2];
 
         for( int i=0; i<order_verts.size(); i++ )
         {
@@ -108,17 +108,11 @@ void OBJLoader:: load(string path)
              normals[i*4+3] = not_nice_normals[((order_normals[i]-1)*4)+3];
         }
 
-        for( int i = 0;i < vertexCount*4; i++)
+        for( int i=0; i<order_colors.size(); i++ )
         {
-            colors[i] = 0.5;
+             colors[i*2] = not_nice_colors[((order_colors[i]-1)*2)+0];
+             colors[i*2+1] = not_nice_colors[((order_colors[i]-1)*2)+1];
         }
-
-
-        /*for( int i=0; i<vertexCount; i++ )
-        {
-             colors[i] = not_nice_colors[order_colors[i] - 1]; i++;
-             colors[i] = not_nice_colors[order_colors[i] - 1]; i++;
-        }*/
 
     }
     fclose(file);
@@ -141,7 +135,6 @@ float * OBJLoader::getNormals()
 float * OBJLoader::getColors()
 {
     return colors;
-    //return verts;
 }
 unsigned int OBJLoader::getVertexCount()
 {

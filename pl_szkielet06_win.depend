@@ -924,7 +924,7 @@
 1559604224 c:\users\marceli\downloads\pl_szkielet06_win\pl_szkielet06_win\glm\gtc\type_ptr.inl
 	<cstring>
 
-1561244269 c:\users\marceli\downloads\pl_szkielet06_win\pl_szkielet06_win\object.h
+1561245490 c:\users\marceli\downloads\pl_szkielet06_win\pl_szkielet06_win\object.h
 	<GL/glew.h>
 	<GLFW/glfw3.h>
 	<glm/glm.hpp>
@@ -959,7 +959,7 @@
 	<iostream>
 	"lodepng.h"
 
-1561244349 source:c:\users\marceli\downloads\pl_szkielet06_win\pl_szkielet06_win\main_file.cpp
+1561246268 source:c:\users\marceli\downloads\pl_szkielet06_win\pl_szkielet06_win\main_file.cpp
 	<GL/glew.h>
 	<GLFW/glfw3.h>
 	<glm/glm.hpp>
@@ -974,10 +974,10 @@
 
 1559604218 c:\users\marceli\downloads\pl_szkielet06_win\pl_szkielet06_win\constants.h
 
-1561244332 source:c:\users\marceli\downloads\pl_szkielet06_win\pl_szkielet06_win\object.cpp
+1561245474 source:c:\users\marceli\downloads\pl_szkielet06_win\pl_szkielet06_win\object.cpp
 	"Object.h"
 
-1560998151 source:c:\users\marceli\downloads\pl_szkielet06_win\pl_szkielet06_win\objloader.cpp
+1561245657 source:c:\users\marceli\downloads\pl_szkielet06_win\pl_szkielet06_win\objloader.cpp
 	"OBJLoader.h"
 
 1559604218 source:c:\users\marceli\downloads\pl_szkielet06_win\pl_szkielet06_win\shaderprogram.cpp
@@ -996,6 +996,6 @@
 	<iostream>
 	<vector>
 
-1561239554 source:c:\users\marceli\downloads\pl_szkielet06_win\pl_szkielet06_win\markup.cpp
+1561246317 source:c:\users\marceli\downloads\pl_szkielet06_win\pl_szkielet06_win\markup.cpp
 	"Markup.h"
 
