@@ -16,7 +16,7 @@ class Car
 {
     public:
         Car();
-        void loadFromPath(string pathBody,string pathWheel, float apower, float abpower,vec3 aposition,
+        void loadFromPath(string pathBody,string pathWheel, string texPathBody, string texPathWheel, float apower, float abpower,vec3 aposition,
             float rotX, float rotY, float rotZ, float ascale);
         vec3 getPosition();
         float getRotation();

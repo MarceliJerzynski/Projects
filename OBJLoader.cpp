@@ -87,7 +87,7 @@ void OBJLoader:: load(string path)
 
     verts = new float[order_verts.size()*4];
     normals=new float[order_normals.size()*4];
-    colors =new float[vertexCount*4];
+    colors =new float[order_colors.size()*4];
 
         for( int i=0; i<order_verts.size(); i++ )
         {

@@ -162,7 +162,7 @@ void drawScene(GLFWwindow* window,mat4 &V, mat4 &P, Object &cube, Car &player, O
         cout<<"REACHED"<<endl;
     }
 
-    for(int i = 0 ; i < 20; i++)
+    for(int i = 0 ; i < 10; i++)
     {
         tree[i].render(V, P, sp);
     }
@@ -328,19 +328,19 @@ int main(void)
 //Tworzenie obiektów
 //----------------------------------------------------------------------------------------------------------------------
 	Car player;
-    player.loadFromPath("BODY.obj", "wheel.obj",0.01,0.05 ,vec3(0.0f,0.0f,10.0f), 0.0f,0.0f,0.0f,1.0f);
+    player.loadFromPath("BODY.obj", "wheel.obj","bricks.png","bricks.png", 0.01,0.05 ,vec3(0.0f,0.0f,10.0f), 0.0f,0.0f,0.0f,1.0f);
     player.getMarkup()->loadMarkup(0.2);
     Object cube;
-    cube.loadFromPath("cube.obj", vec3(0.0f,-5000.0f,0.0f), 0.0f, 0.0f, 0.0f, 10000.0f);
+    cube.loadFromPath("track.obj","bricks.png", vec3(0.0f,-10.0f,0.0f), -90.0f, 0.0f, 0.0f, 1.0f);
 
     OBJLoader loader;
     loader.load("Tree.obj");
 
-    Object tree[20];
+    Object tree[10];
     int i = 0;
-    for(i = 0 ; i < 20; i++)
+    for(i = 0 ; i < 10; i++)
     {
-        tree[i].loadFromLoader(loader, vec3(5*i,0,20*i), 0,0,0,2);
+        tree[i].loadFromLoader(loader,"bricks.png", vec3(0,0,-30*i), 0,0,0,2);
     }
 
 //----------------------------------------------------------------------------------------------------------------------

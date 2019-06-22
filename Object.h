@@ -11,6 +11,7 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include "OBJLoader.h"
 #include "shaderprogram.h"
+#include "lodepng.h"
 
 using namespace std;
 using namespace glm;
@@ -18,8 +19,8 @@ class Object
 {
     public:
         Object();
-        void loadFromPath(string path, vec3 position, float rotX, float rotY, float rotZ, float scale);
-        void loadFromLoader(OBJLoader loader, vec3 position, float rotX, float rotY, float rotZ, float scale);
+        void loadFromPath(string path, string texturePath, vec3 position, float rotX, float rotY, float rotZ, float scale);
+        void loadFromLoader(OBJLoader loader, string texturePath, vec3 position, float rotX, float rotY, float rotZ, float scale);
         mat4 getM();
         float * getVerts();
         float * getNormals();
@@ -35,6 +36,11 @@ class Object
         void setM(vec3 aposition, float rotX, float rotY, float rotZ, float scale);
         void rotateX(float angle);
     protected:
+        GLuint readTexture(string path);
+        void sendAttributes(float *verts, float *normals, float *colors, ShaderProgram *sp);
+        void disableAttributes(ShaderProgram *sp);
+        void UniformAllMatrix4(mat4 M,mat4 V, mat4 P, ShaderProgram *sp);
+
 
         mat4 M;
         float *verts;
@@ -46,11 +52,9 @@ class Object
         float rotationX;
         float rotationZ;
         float scaling;
+        GLuint tex;
 
     private:
-        void sendAttributes(float *verts, float *normals, float *colors, ShaderProgram *sp);
-        void disableAttributes(ShaderProgram *sp);
-        void UniformAllMatrix4(mat4 M,mat4 V, mat4 P, ShaderProgram *sp);
 };
 
 #endif // OBJECT_H

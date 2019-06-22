@@ -4,7 +4,7 @@ Car::Car()
 {
 }
 
-void Car::loadFromPath(string pathBody,string pathWheel, float apower, float abpower,vec3 aposition,
+void Car::loadFromPath(string pathBody,string pathWheel,string texPathBody, string texPathWheel,  float apower, float abpower,vec3 aposition,
          float rotX, float rotY, float rotZ, float ascale)
 {
 //Ladowanie poszczegolnych obiektow
@@ -12,19 +12,19 @@ void Car::loadFromPath(string pathBody,string pathWheel, float apower, float abp
     markup = new Markup();
 
     body=new Object();
-    body->loadFromPath(pathBody,aposition, rotX,rotY,rotZ,ascale);
+    body->loadFromPath(pathBody,texPathBody,aposition, rotX,rotY,rotZ,ascale);
 
     FRW =new Object();
-    FRW->loadFromPath(pathWheel, aposition, rotX, rotY - 180,rotZ,ascale);
+    FRW->loadFromPath(pathWheel,texPathWheel, aposition, rotX, rotY - 180,rotZ,ascale);
 
     RLW =new Object();
-    RLW->loadFromPath(pathWheel, aposition, rotX, rotY,rotZ,ascale);
+    RLW->loadFromPath(pathWheel,texPathWheel, aposition, rotX, rotY,rotZ,ascale);
 
     RRW =new Object();
-    RRW->loadFromPath(pathWheel, aposition, rotX, rotY - 180,rotZ,ascale);
+    RRW->loadFromPath(pathWheel,texPathWheel, aposition, rotX, rotY - 180,rotZ,ascale);
 
     FLW =new Object();
-    FLW->loadFromPath(pathWheel, aposition, rotX, rotY,rotZ,ascale);
+    FLW->loadFromPath(pathWheel,texPathWheel, aposition, rotX, rotY,rotZ,ascale);
 
 //----------------------------------------------------------------------------------------------------------------------
 

@@ -4,7 +4,7 @@ Object::Object()
 {
 }
 
-void Object::loadFromPath(string path,vec3 aposition, float rotX, float rotY, float rotZ, float ascale)
+void Object::loadFromPath(string path, string texturePath,vec3 aposition, float rotX, float rotY, float rotZ, float ascale)
 {
     OBJLoader loader;
     loader.load(path);
@@ -14,9 +14,10 @@ void Object::loadFromPath(string path,vec3 aposition, float rotX, float rotY, fl
     normals = loader.getNormals();
     colors = loader.getColors();
     vertexCount = loader.getVertexCount();
+    tex = readTexture(texturePath);
 }
 
-void Object::loadFromLoader(OBJLoader loader, vec3 aposition, float rotX, float rotY, float rotZ, float ascale)
+void Object::loadFromLoader(OBJLoader loader, string texturePath,  vec3 aposition, float rotX, float rotY, float rotZ, float ascale)
 {
     position = aposition;
     setM(aposition, rotX, rotY, rotZ, ascale);
@@ -24,6 +25,7 @@ void Object::loadFromLoader(OBJLoader loader, vec3 aposition, float rotX, float 
     normals = loader.getNormals();
     colors = loader.getColors();
     vertexCount = loader.getVertexCount();
+    tex = readTexture(texturePath);
 }
 
 mat4 Object::getM()
@@ -105,21 +107,21 @@ void Object::UniformAllMatrix4(mat4 M,mat4 V, mat4 P, ShaderProgram *sp)
 
 void Object::disableAttributes(ShaderProgram *sp)
 {
-    glDisableVertexAttribArray(sp->a("vertex"));  //Wy³¹cz przesy³anie danych do atrybutu vertex
-    glDisableVertexAttribArray(sp->a("normal"));  //Wy³¹cz przesy³anie danych do atrybutu normal
-    glDisableVertexAttribArray(sp->a("color"));  //Wy³¹cz przesy³anie danych do atrybutu color
+    glDisableVertexAttribArray(sp->a("vertex"));  //WyÂ³Â¹cz przesyÂ³anie danych do atrybutu vertex
+    glDisableVertexAttribArray(sp->a("normal"));  //WyÂ³Â¹cz przesyÂ³anie danych do atrybutu normal
+    glDisableVertexAttribArray(sp->a("color"));  //WyÂ³Â¹cz przesyÂ³anie danych do atrybutu color
 }
 
 void Object::sendAttributes(float *verts, float *normals, float *colors, ShaderProgram *sp)
 {
-    glEnableVertexAttribArray(sp->a("vertex"));  //W³¹cz przesy³anie danych do atrybutu vertex
-    glVertexAttribPointer(sp->a("vertex"),4,GL_FLOAT,false,0,verts); //Wska¿ tablicê z danymi dla atrybutu vertex
+    glEnableVertexAttribArray(sp->a("vertex"));  //WÂ³Â¹cz przesyÂ³anie danych do atrybutu vertex
+    glVertexAttribPointer(sp->a("vertex"),4,GL_FLOAT,false,0,verts); //WskaÂ¿ tablicÃª z danymi dla atrybutu vertex
 
-    glEnableVertexAttribArray(sp->a("normal"));  //W³¹cz przesy³anie danych do atrybutu normal
-    glVertexAttribPointer(sp->a("normal"),4,GL_FLOAT,false,0,normals); //Wska¿ tablicê z danymi dla atrybutu normal
+    glEnableVertexAttribArray(sp->a("normal"));  //WÂ³Â¹cz przesyÂ³anie danych do atrybutu normal
+    glVertexAttribPointer(sp->a("normal"),4,GL_FLOAT,false,0,normals); //WskaÂ¿ tablicÃª z danymi dla atrybutu normal
 
-    glEnableVertexAttribArray(sp->a("color"));  //W³¹cz przesy³anie danych do atrybutu color
-    glVertexAttribPointer(sp->a("color"),4,GL_FLOAT,false,0,colors); //Wska¿ tablicê z danymi dla atrybutu color
+    glEnableVertexAttribArray(sp->a("color"));  //WÂ³Â¹cz przesyÂ³anie danych do atrybutu color
+    glVertexAttribPointer(sp->a("color"),4,GL_FLOAT,false,0,colors); //WskaÂ¿ tablicÃª z danymi dla atrybutu color
 }
 
 void Object::setM(vec3 aposition, float rotX, float rotY, float rotZ, float ascale)
@@ -142,4 +144,27 @@ void Object:: rotateX(float angle)
     rotationX += angle;
    // M = rotate(M, rotationX*3.14f/180.0f, vec3(1.0f, 0.0f, 0.0f));
    setM(position, rotationX, rotationY,rotationZ, scaling);
+}
+
+GLuint Object::readTexture(string path) {
+  GLuint tex;
+  glActiveTexture(GL_TEXTURE0);
+
+  //Wczytanie do pamiÄ™ci komputera
+  std::vector<unsigned char> image;   //Alokuj wektor do wczytania obrazka
+  unsigned width, height;   //Zmienne do ktÃ³rych wczytamy wymiary obrazka
+  //Wczytaj obrazek
+  unsigned error = lodepng::decode(image, width, height, path);
+
+  //Import do pamiÄ™ci karty graficznej
+  glGenTextures(1,&tex); //Zainicjuj jeden uchwyt
+  glBindTexture(GL_TEXTURE_2D, tex); //Uaktywnij uchwyt
+  //Wczytaj obrazek do pamiÄ™ci KG skojarzonej z uchwytem
+  glTexImage2D(GL_TEXTURE_2D, 0, 4, width, height, 0,
+    GL_RGBA, GL_UNSIGNED_BYTE, (unsigned char*) image.data());
+
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+  return tex;
 }
