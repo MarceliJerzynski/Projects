@@ -2,24 +2,28 @@
 #define MARKUP_H
 
 #include "Object.h"
-#include "Car.h"
 #include <iostream>
+#include <vector>
 using namespace std;
 class Markup
 {
     public:
-        Markup(vec3 aposition, float scale);
+        Markup();
+        void loadMarkup(float scale);
         Object getArrow();
-        bool touched(Car car);
+        void touched();
         void changePosition( vec3 aposition);
         vec3 getPosition();
+        float getRadius();
     protected:
 
     private:
         Object arrow;
         float scaling;
-        float Radius = 8;
+        float radius;
         vec3 position;
+        int index;
+        vector <vec3> track;
 };
 
 #endif // MARKUP_H

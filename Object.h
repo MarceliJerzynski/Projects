@@ -24,14 +24,16 @@ class Object
         float * getVerts();
         float * getNormals();
         float * getColors();
-        float getRotation();
+        float getRotationY();
         unsigned int getVertexCount();
         vec3 getPosition();
+        void setPosition(vec3 aposition);
+        void setRotation(float rotX, float rotY, float rotZ);
         void turn(float rot);
         void move(float dc);
         void render(mat4 V, mat4 P, ShaderProgram *sp);
         void setM(vec3 aposition, float rotX, float rotY, float rotZ, float scale);
-
+        void rotateX(float angle);
     protected:
 
         mat4 M;
@@ -40,7 +42,9 @@ class Object
         float *colors;
         unsigned int vertexCount;
         vec3 position;
-        float rotation;
+        float rotationY;
+        float rotationX;
+        float rotationZ;
         float scaling;
 
     private:

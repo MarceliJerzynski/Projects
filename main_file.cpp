@@ -42,21 +42,19 @@ const float BLUE = 0.808;
 const char* title = "Racing Game";
 const int FPS = 60;
 const float max_angle = 90;
-const float changing_angle = 0.15;
+const float changing_angle = 0.315;
 
 float distance_to_player = 9;
 float pitch_angle = 15;
 float yaw_angle = 0;
 
 
-float angle_around_player = 0;
+float angle_around_player = 360;
 
-float camera_speed_x=-0.1;
-float camera_speed_z=-0.1;
+
 float aspectRatio=1;
 float turn_angle=0.75;
 float speed_angle = 0;
-float player_speed=0.2;
 
 bool turnLeft  = false;
 bool turnRight = false;
@@ -141,7 +139,7 @@ void setCamera(mat4 &V, Car player)
 
 
 //Procedura rysująca zawartość sceny
-void drawScene(GLFWwindow* window,mat4 &V, mat4 &P, Object &cube, Car &player, Object tree[20], Markup &markup) {
+void drawScene(GLFWwindow* window,mat4 &V, mat4 &P, Object &cube, Car &player, Object tree[20]) {
 
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     sp->use();
@@ -156,8 +154,13 @@ void drawScene(GLFWwindow* window,mat4 &V, mat4 &P, Object &cube, Car &player, O
 //Renderowanie obiektów
 //----------------------------------------------------------------------------------------------------------------------
     player.render(V, P, sp);
+    player.getMarkup().getArrow().render(V, P, sp);
     cube.render(V, P, sp);
-    markup.getArrow().render(V, P, sp);
+
+    if (player.checkpointReached())
+    {
+        cout<<"REACHED"<<endl;
+    }
 
     for(int i = 0 ; i < 20; i++)
     {
@@ -165,10 +168,10 @@ void drawScene(GLFWwindow* window,mat4 &V, mat4 &P, Object &cube, Car &player, O
     }
 //----------------------------------------------------------------------------------------------------------------------
 
-   if ( markup.touched(player))
-    {
-       markup.changePosition(vec3(0,0,markup.getPosition().z-10));
-    }
+//   if ( markup.touched(player))
+ //   {
+  //     markup.changePosition(vec3(0,0,markup.getPosition().z-10));
+ //   }
 
 
     glfwSwapBuffers(window); //Przerzuć tylny bufor na przedni
@@ -259,7 +262,28 @@ void moving(mat4 &V,  Car &player)
             angle_around_player +=speed_angle;
 
 
+        if (turnLeft)
+        {
+            player.turnWheel(3*turn_angle);
+        }
+        if (turnRight)
+        {
+            player.turnWheel(-3*turn_angle);
+        }
+        if (!turnLeft && !turnRight)  //prostuj koła
+        {
+            if (player.getWheelRotation() > 0)
+            {
+                player.turnWheel(-3*turn_angle);
+            }
+            if (player.getWheelRotation() < 0)
+            {
+                player.turnWheel(3*turn_angle);
+            }
+        }
+
     setCamera(V, player);
+
 }
 
 GLFWwindow* openGlstuff()
@@ -304,8 +328,8 @@ int main(void)
 //Tworzenie obiektów
 //----------------------------------------------------------------------------------------------------------------------
 	Car player;
-    player.loadFromPath("BODY.obj", "FLW.obj", "FRW.obj","RLW.obj","RRW.obj",0.01,0.05 ,vec3(0.0f,0.0f,10.0f), 0.0f,0.0f,0.0f,1.0f);
-
+    player.loadFromPath("BODY.obj", "wheel.obj",0.01,0.05 ,vec3(0.0f,0.0f,10.0f), 0.0f,0.0f,0.0f,1.0f);
+    player.getMarkup().loadMarkup(0.2);
     Object cube;
     cube.loadFromPath("cube.obj", vec3(0.0f,-5000.0f,0.0f), 0.0f, 0.0f, 0.0f, 10000.0f);
 
@@ -318,8 +342,6 @@ int main(void)
     {
         tree[i].loadFromLoader(loader, vec3(5*i,0,20*i), 0,0,0,2);
     }
-
-    Markup markup(vec3(0,0,-10), 0.2);
 
 //----------------------------------------------------------------------------------------------------------------------
 
@@ -337,7 +359,7 @@ int main(void)
 	while (!glfwWindowShouldClose(window)) //Tak długo jak okno nie powinno zostać zamknięte
 	{
         glfwSetTime(0); //Zeruj timer
-		drawScene(window, V, P, cube, player, tree, markup); //Wykonaj procedurę rysującą
+		drawScene(window, V, P, cube, player, tree); //Wykonaj procedurę rysującą
         moving(V, player);                                   //wykonaj procedurę odpowiajająca za poruszanie graczem oraz kamerą
 		glfwPollEvents();                                    //Wykonaj procedury callback w zalezności od zdarzeń jakie zaszły.
 		while(glfwGetTime() < 1/FPS) {}                      //Zapewnij stałe 60FPS

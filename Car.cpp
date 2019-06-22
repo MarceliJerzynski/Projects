@@ -4,7 +4,7 @@ Car::Car()
 {
 }
 
-void Car::loadFromPath(string pathBody,string pathFLW,string pathFRW,string pathRLW,string pathRRW, float apower, float abpower,vec3 aposition,
+void Car::loadFromPath(string pathBody,string pathWheel, float apower, float abpower,vec3 aposition,
          float rotX, float rotY, float rotZ, float ascale)
 {
 //Ladowanie poszczegolnych obiektow
@@ -12,17 +12,17 @@ void Car::loadFromPath(string pathBody,string pathFLW,string pathFRW,string path
     body=new Object();
     body->loadFromPath(pathBody,aposition, rotX,rotY,rotZ,ascale);
 
-    FLW =new Object();
-    FLW->loadFromPath(pathFLW, aposition, rotX, rotY,rotZ,ascale);
-
     FRW =new Object();
-    FRW->loadFromPath(pathFRW, aposition, rotX, rotY,rotZ,ascale);
+    FRW->loadFromPath(pathWheel, aposition, rotX, rotY - 180,rotZ,ascale);
 
     RLW =new Object();
-    RLW->loadFromPath(pathRLW, aposition, rotX, rotY,rotZ,ascale);
+    RLW->loadFromPath(pathWheel, aposition, rotX, rotY,rotZ,ascale);
 
     RRW =new Object();
-    RRW->loadFromPath(pathRRW, aposition, rotX, rotY,rotZ,ascale);
+    RRW->loadFromPath(pathWheel, aposition, rotX, rotY - 180,rotZ,ascale);
+
+    FLW =new Object();
+    FLW->loadFromPath(pathWheel, aposition, rotX, rotY,rotZ,ascale);
 
 //----------------------------------------------------------------------------------------------------------------------
 
@@ -30,7 +30,6 @@ void Car::loadFromPath(string pathBody,string pathFLW,string pathFRW,string path
 
 //Ustalanie wartosci poczatkowych
 //----------------------------------------------------------------------------------------------------------------------
-    wheel_angle = 0;
     Power = apower;
     temporaryPower = 0;
     backPower = abpower;
@@ -38,6 +37,7 @@ void Car::loadFromPath(string pathBody,string pathFLW,string pathFRW,string path
     a = 0;
     goForward = false;
     goBackward = false;
+    wheelRotation = rotZ;
 //----------------------------------------------------------------------------------------------------------------------
 }
 
@@ -55,8 +55,31 @@ void Car::turn(float rot)
     RRW->turn(rot);
 }
 
+void Car::turnWheel(float rot)
+{
+    if ( FLW -> getRotationY() - body -> getRotationY() < max_wheel_angle*3.14f/180.0f)
+    {
+        if ( rot > 0)
+        {
+        FLW -> turn(rot);
+        FRW -> turn(rot);
+        }
+    }
+     if   (FLW -> getRotationY() - body -> getRotationY() >-max_wheel_angle*3.14f/180.0f)
+    {
+        if ( rot < 0)
+        {
+            FLW -> turn(rot);
+            FRW -> turn(rot);
+        }
+    }
+}
+
 int Car::isMoving()
 {
+
+//zatrzymanie samochodu
+//----------------------------------------------------------------------------------------------------------------------
     if (v < 0.02 && v > -0.02)
     {
         return 0;
@@ -66,14 +89,16 @@ int Car::isMoving()
         return 1;
     } else
     return -1;
+
+//----------------------------------------------------------------------------------------------------------------------
 }
+
 
 void Car::move(int going)
 //going = 1 <- gracz naciska W
 //going = 2 <- gracz naciska S
 //going = 0 <- gracz nie trzyma nic
 {
-
     if ( going == 1 )
     {   if (temporaryPower < 1)
             temporaryPower += Power;
@@ -109,15 +134,68 @@ void Car::move(int going)
     v = v + a/60;
     float s = v;
     body->move(s);
-    FLW->move(s);
-    FRW->move(s);
-    RLW->move(s);
-    RRW->move(s);
+
+    vec3 aposition;
+    aposition.x = 0.786 * cos(-body->getRotationY()) - 1.257*sin(-body->getRotationY()) + body->getPosition().x;
+    aposition.y = body->getPosition().y + 0.334;
+    aposition.z = 0.786 * sin(-body->getRotationY()) + 1.257*cos(-body->getRotationY()) + body->getPosition().z;
+
+    FLW->setPosition(aposition);
+
+    aposition.x = -0.786 * cos(-body->getRotationY()) - 1.257*sin(-body->getRotationY()) + body->getPosition().x;
+    aposition.y = body->getPosition().y + 0.334;
+    aposition.z = -0.786 * sin(-body->getRotationY()) + 1.257*cos(-body->getRotationY()) + body->getPosition().z;
+
+    FRW->setPosition(aposition);
+
+    aposition.x = -0.786 * cos(-body->getRotationY()) + 1.353*sin(-body->getRotationY()) + body->getPosition().x;
+    aposition.y = body->getPosition().y + 0.334;
+    aposition.z = -0.786 * sin(-body->getRotationY()) - 1.353*cos(-body->getRotationY()) + body->getPosition().z;
+
+    RRW->setPosition(aposition);
+
+    aposition.x = 0.786 * cos(-body->getRotationY()) + 1.353*sin(-body->getRotationY()) + body->getPosition().x;
+    aposition.y = body->getPosition().y + 0.334;
+    aposition.z = 0.786 * sin(-body->getRotationY()) - 1.353*cos(-body->getRotationY()) + body->getPosition().z;
+
+    RLW->setPosition(aposition);
+
+
+//operacje krêcenia ko³em
+//----------------------------------------------------------------------------------------------------------------------
+FLW->rotateX(-v*100);
+FRW->rotateX(-v*100);
+RLW->rotateX(-v*100);
+RRW->rotateX(-v*100);
+
+//----------------------------------------------------------------------------------------------------------------------
 }
 
 float Car::getRotation()
 {
-    return body->getRotation();
+    return body->getRotationY();
+}
+
+float Car::getWheelRotation()
+{
+    return FLW ->getRotationY() - body -> getRotationY();
+}
+
+Markup Car::getMarkup()
+{
+    return markup;
+}
+
+bool Car::checkpointReached()
+{
+     if ((body->getPosition().x - markup.getPosition().x)*(body->getPosition().x - markup.getPosition().y)
+        + (body->getPosition().z + markup.getPosition().z)*(body->getPosition().z + markup.getPosition().z) <= markup.getRadius()*markup.getRadius()) //znaki w drugim zamienione bo z jest odwrotnie
+    {
+        markup.touched();
+        return true;
+    }
+
+    return false;
 }
 
 void Car::render(mat4 V, mat4 P, ShaderProgram *sp)

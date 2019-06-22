@@ -50,6 +50,8 @@
 		</Linker>
 		<Unit filename="Car.cpp" />
 		<Unit filename="Car.h" />
+		<Unit filename="Markup.cpp" />
+		<Unit filename="Markup.h" />
 		<Unit filename="OBJLoader.cpp" />
 		<Unit filename="OBJLoader.h" />
 		<Unit filename="Object.cpp" />
