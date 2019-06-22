@@ -10,7 +10,8 @@
 #include "shaderprogram.h"
 
 const float max_wheel_angle = 45;
-
+const float turn_angle = 0.75;
+const float turn_wheel_angle = turn_angle*3;
 
 class Car
 {
@@ -24,10 +25,13 @@ class Car
         Markup * getMarkup();
         bool checkpointReached();
         void render(mat4 V, mat4 P, ShaderProgram *sp);
-        void turn(float rot);
-        void turnWheel(float rot);
+        void turnLeft();
+        void turnRight();
+        void turnWheelLeft();
+        void turnWheelRight();
         int isMoving(); //1 - do przodu, -1 - do tylu, 0 - stoi
         void move(int going);   //0 - nie klika nic, 1 - trzyma W, 2 - trzyma S
+        void AI();
     protected:
         Object *body;
         Object *FLW,*FRW,*RLW,*RRW;

@@ -48,32 +48,39 @@ vec3 Car::getPosition()
     return body->getPosition();
 }
 
-void Car::turn(float rot)
+void Car::turnLeft()
 {
-    body->turn(rot);
-    FLW->turn(rot);
-    FRW->turn(rot);
-    RLW->turn(rot);
-    RRW->turn(rot);
+    body->turn(turn_angle);
+    FLW->turn(turn_angle);
+    FRW->turn(turn_angle);
+    RLW->turn(turn_angle);
+    RRW->turn(turn_angle);
 }
 
-void Car::turnWheel(float rot)
+void Car::turnRight()
+{
+    body->turn(-turn_angle);
+    FLW->turn(-turn_angle);
+    FRW->turn(-turn_angle);
+    RLW->turn(-turn_angle);
+    RRW->turn(-turn_angle);
+}
+
+void Car::turnWheelLeft()
 {
     if ( FLW -> getRotationY() - body -> getRotationY() < max_wheel_angle*3.14f/180.0f)
     {
-        if ( rot > 0)
-        {
-        FLW -> turn(rot);
-        FRW -> turn(rot);
-        }
+        FLW -> turn(turn_wheel_angle);
+        FRW -> turn(turn_wheel_angle);
     }
+}
+
+void Car::turnWheelRight()
+{
      if   (FLW -> getRotationY() - body -> getRotationY() >-max_wheel_angle*3.14f/180.0f)
     {
-        if ( rot < 0)
-        {
-            FLW -> turn(rot);
-            FRW -> turn(rot);
-        }
+        FLW -> turn(-turn_wheel_angle);
+        FRW -> turn(-turn_wheel_angle);
     }
 }
 
@@ -207,4 +214,21 @@ void Car::render(mat4 V, mat4 P, ShaderProgram *sp)
     FRW->render(V, P, sp);
     RLW->render(V, P, sp);
     RRW->render(V, P, sp);
+}
+
+void Car::AI()
+{
+    move(1); //rusz do przodu
+    float a = tan(body->getRotationY());
+    float b = -body->getPosition().z - a*body->getPosition().x;
+    if (markup->getPosition().z < a*body->getPosition().x + b )
+    {
+        turnLeft();
+        turnWheelLeft();
+    } else
+    {
+        turnRight();
+        turnWheelRight();
+    }
+
 }

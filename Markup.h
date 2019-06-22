@@ -15,6 +15,7 @@ class Markup
         void changePosition( vec3 aposition);
         vec3 getPosition();
         float getRadius();
+        unsigned int getIndex();
     protected:
 
     private:

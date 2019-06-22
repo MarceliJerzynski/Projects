@@ -53,7 +53,6 @@ float angle_around_player = 0;
 
 
 float aspectRatio=1;
-float turn_angle=0.75;
 float speed_angle = 0;
 
 bool turnLeft  = false;
@@ -139,7 +138,7 @@ void setCamera(mat4 &V, Car player)
 
 
 //Procedura rysująca zawartość sceny
-void drawScene(GLFWwindow* window,mat4 &V, mat4 &P, Object &cube, Car &player, Object tree[20]) {
+void drawScene(GLFWwindow* window,mat4 &V, mat4 &P, Object &cube, Car &player, Object tree[20], Car &enemy0) {
 
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     sp->use();
@@ -157,9 +156,12 @@ void drawScene(GLFWwindow* window,mat4 &V, mat4 &P, Object &cube, Car &player, O
     player.getMarkup()->getArrow()->render(V, P, sp);
     cube.render(V, P, sp);
 
+    enemy0.AI();
+    enemy0.render(V, P, sp);
+
     if (player.checkpointReached())
     {
-        cout<<"REACHED"<<endl;
+        cout<<player.getRotation()<<endl;
     }
 
     for(int i = 0 ; i < 10; i++)
@@ -197,7 +199,7 @@ void moving(mat4 &V,  Car &player)
     {
         if (turnLeft)   //i jednoczesnie A
         {
-            player.turn(turn_angle);    //skrec gracza
+            player.turnLeft();    //skrec gracza
             if ( angle_around_player >= -max_angle)  //skrec kamere
             {
                 if ( speed_angle == 0)
@@ -208,7 +210,7 @@ void moving(mat4 &V,  Car &player)
         } else
 	    if (turnRight) //i jednoczesnie D
         {
-            player.turn(-turn_angle);   //skrec gracza
+            player.turnRight();   //skrec gracza
             if (angle_around_player <= max_angle)    //skrec kamere
             {
                 if ( speed_angle == 0)
@@ -222,7 +224,7 @@ void moving(mat4 &V,  Car &player)
     {
         if (turnLeft)   //i jednoczesnie A
         {
-            player.turn(-turn_angle);   //skrec gracza
+            player.turnRight();   //skrec gracza
             if (angle_around_player < max_angle)    //skrec kamere
             {
                 if ( speed_angle == 0)
@@ -233,7 +235,7 @@ void moving(mat4 &V,  Car &player)
         } else
         if (turnRight)  //i jednoczesnie D
         {
-            player.turn(turn_angle);
+            player.turnLeft();
             if ( angle_around_player > -max_angle)  //skrec kamere
             {
                 if ( speed_angle == 0)
@@ -264,21 +266,21 @@ void moving(mat4 &V,  Car &player)
 
         if (turnLeft)
         {
-            player.turnWheel(3*turn_angle);
+            player.turnWheelLeft();
         }
         if (turnRight)
         {
-            player.turnWheel(-3*turn_angle);
+            player.turnWheelRight();
         }
         if (!turnLeft && !turnRight)  //prostuj koła
         {
             if (player.getWheelRotation() > 0)
             {
-                player.turnWheel(-3*turn_angle);
+                player.turnWheelRight();
             }
             if (player.getWheelRotation() < 0)
             {
-                player.turnWheel(3*turn_angle);
+                player.turnWheelLeft();
             }
         }
 
@@ -328,10 +330,15 @@ int main(void)
 //Tworzenie obiektów
 //----------------------------------------------------------------------------------------------------------------------
 	Car player;
-    player.loadFromPath("BODY.obj", "wheel.obj","bricks.png","texWheel.png", 0.01,0.05 ,vec3(0.0f,0.0f,10.0f), 0.0f,0.0f,0.0f,1.0f);
+    player.loadFromPath("BODY.obj", "wheel.obj","bricks.png","texWheel.png", 0.01,0.05 ,vec3(0.0f,1.0f,10.0f), 0.0f,0.0f,0.0f,1.0f);
     player.getMarkup()->loadMarkup(0.2);
+
+    Car enemy0;
+    enemy0.loadFromPath("BODY.obj", "wheel.obj","tiger.png","texWheel.png", 0.005,0.05 ,vec3(0.0f,1.0f,10.0f), 0.0f,0.0f,0.0f,1.0f);
+    enemy0.getMarkup()->loadMarkup(0.2);
+
     Object cube;
-    cube.loadFromPath("cube.obj","bricks.png", vec3(0.0f,0.0f,0.0f), -90.0f, 0.0f, 0.0f, 1.0f);
+    cube.loadFromPath("cube.obj","bricks.png", vec3(0.0f,-5000.0f,0.0f), -90.0f, 0.0f, 0.0f, 10000.0f);
 
     OBJLoader loader;
     loader.load("Tree.obj");
@@ -359,7 +366,7 @@ int main(void)
 	while (!glfwWindowShouldClose(window)) //Tak długo jak okno nie powinno zostać zamknięte
 	{
         glfwSetTime(0); //Zeruj timer
-		drawScene(window, V, P, cube, player, tree); //Wykonaj procedurę rysującą
+		drawScene(window, V, P, cube, player, tree, enemy0); //Wykonaj procedurę rysującą
         moving(V, player);                                   //wykonaj procedurę odpowiajająca za poruszanie graczem oraz kamerą
 		glfwPollEvents();                                    //Wykonaj procedury callback w zalezności od zdarzeń jakie zaszły.
 		while(glfwGetTime() < 1/FPS) {}                      //Zapewnij stałe 60FPS

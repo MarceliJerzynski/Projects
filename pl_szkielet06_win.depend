@@ -1,8 +1,8 @@
 # depslib dependency file v1.0
-1561244304 source:c:\users\marceli\downloads\pl_szkielet06_win\pl_szkielet06_win\car.cpp
+1561250038 source:c:\users\marceli\downloads\pl_szkielet06_win\pl_szkielet06_win\car.cpp
 	"Car.h"
 
-1561244290 c:\users\marceli\downloads\pl_szkielet06_win\pl_szkielet06_win\car.h
+1561248844 c:\users\marceli\downloads\pl_szkielet06_win\pl_szkielet06_win\car.h
 	<GL/glew.h>
 	<GLFW/glfw3.h>
 	<glm/glm.hpp>
@@ -959,7 +959,7 @@
 	<iostream>
 	"lodepng.h"
 
-1561246268 source:c:\users\marceli\downloads\pl_szkielet06_win\pl_szkielet06_win\main_file.cpp
+1561249322 source:c:\users\marceli\downloads\pl_szkielet06_win\pl_szkielet06_win\main_file.cpp
 	<GL/glew.h>
 	<GLFW/glfw3.h>
 	<glm/glm.hpp>
@@ -991,11 +991,11 @@
 	"Car.h"
 	<iostream>
 
-1561237614 c:\users\marceli\downloads\pl_szkielet06_win\pl_szkielet06_win\markup.h
+1561247753 c:\users\marceli\downloads\pl_szkielet06_win\pl_szkielet06_win\markup.h
 	"Object.h"
 	<iostream>
 	<vector>
 
-1561246317 source:c:\users\marceli\downloads\pl_szkielet06_win\pl_szkielet06_win\markup.cpp
+1561247753 source:c:\users\marceli\downloads\pl_szkielet06_win\pl_szkielet06_win\markup.cpp
 	"Markup.h"
 

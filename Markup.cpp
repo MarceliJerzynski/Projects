@@ -60,3 +60,8 @@ float Markup::getRadius()
 {
     return radius;
 }
+
+unsigned int Markup::getIndex()
+{
+    return index;
+}
