@@ -191,7 +191,7 @@ Markup * Car::getMarkup()
 bool Car::checkpointReached()
 {
      if ((body->getPosition().x - markup->getPosition().x)*(body->getPosition().x - markup->getPosition().x)
-        + (body->getPosition().z + markup->getPosition().z)*(body->getPosition().z + markup->getPosition().z) <= markup->getRadius()*markup->getRadius()) //znaki w drugim zamienione bo z jest odwrotnie
+        + (body->getPosition().z - markup->getPosition().z)*(body->getPosition().z - markup->getPosition().z) <= markup->getRadius()*markup->getRadius()) //znaki w drugim zamienione bo z jest odwrotnie
     {
         markup->touched();
         return true;

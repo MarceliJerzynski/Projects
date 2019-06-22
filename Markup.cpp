@@ -7,14 +7,14 @@ Markup::Markup()
 void Markup::loadMarkup( float scale)
 {
     track.push_back(vec3(0, 0, -10));
-    track.push_back(vec3(0, 0, -20));
-    track.push_back(vec3(5, 0, -25));
-    track.push_back(vec3(10, 0, -30));
-    track.push_back(vec3(5, 0, -35));
+    track.push_back(vec3(0, 0, -200));
+    track.push_back(vec3(5, 0, -250));
+    track.push_back(vec3(10, 0, -300));
+    track.push_back(vec3(5, 0, -350));
 
     arrow = new Object();
     arrow->loadFromPath("arrow.obj", track[0], -90 ,0,0, scale);
-    position = vec3(track[0]);
+    position = track[0];
     index = 0;
     scaling = scale;
     radius = 40*scale;
@@ -27,7 +27,7 @@ Object *Markup::getArrow()
 
 void Markup::touched()
 {
-        if (index == track.size())  //koniec wycisgu
+        if (index == track.size() - 1)  //koniec wycisgu
         {
             cout<<"KONIEC WYŒCIGU!";
         }
@@ -35,6 +35,7 @@ void Markup::touched()
         {
             index++;
             changePosition(track[index]);
+                cout<<"Index = "<<index<<endl;
         }
 }
 
