@@ -10,7 +10,7 @@ class Markup
     public:
         Markup();
         void loadMarkup(float scale);
-        Object getArrow();
+        Object *getArrow();
         void touched();
         void changePosition( vec3 aposition);
         vec3 getPosition();
@@ -18,11 +18,11 @@ class Markup
     protected:
 
     private:
-        Object arrow;
+        Object *arrow;
         float scaling;
         float radius;
         vec3 position;
-        int index;
+        unsigned int index;
         vector <vec3> track;
 };
 

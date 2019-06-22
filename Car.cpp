@@ -9,6 +9,8 @@ void Car::loadFromPath(string pathBody,string pathWheel, float apower, float abp
 {
 //Ladowanie poszczegolnych obiektow
 //----------------------------------------------------------------------------------------------------------------------
+    markup = new Markup();
+
     body=new Object();
     body->loadFromPath(pathBody,aposition, rotX,rotY,rotZ,ascale);
 
@@ -181,17 +183,17 @@ float Car::getWheelRotation()
     return FLW ->getRotationY() - body -> getRotationY();
 }
 
-Markup Car::getMarkup()
+Markup * Car::getMarkup()
 {
     return markup;
 }
 
 bool Car::checkpointReached()
 {
-     if ((body->getPosition().x - markup.getPosition().x)*(body->getPosition().x - markup.getPosition().y)
-        + (body->getPosition().z + markup.getPosition().z)*(body->getPosition().z + markup.getPosition().z) <= markup.getRadius()*markup.getRadius()) //znaki w drugim zamienione bo z jest odwrotnie
+     if ((body->getPosition().x - markup->getPosition().x)*(body->getPosition().x - markup->getPosition().x)
+        + (body->getPosition().z + markup->getPosition().z)*(body->getPosition().z + markup->getPosition().z) <= markup->getRadius()*markup->getRadius()) //znaki w drugim zamienione bo z jest odwrotnie
     {
-        markup.touched();
+        markup->touched();
         return true;
     }
 

@@ -49,7 +49,7 @@ float pitch_angle = 15;
 float yaw_angle = 0;
 
 
-float angle_around_player = 360;
+float angle_around_player = 0;
 
 
 float aspectRatio=1;
@@ -154,7 +154,7 @@ void drawScene(GLFWwindow* window,mat4 &V, mat4 &P, Object &cube, Car &player, O
 //Renderowanie obiektów
 //----------------------------------------------------------------------------------------------------------------------
     player.render(V, P, sp);
-    player.getMarkup().getArrow().render(V, P, sp);
+    player.getMarkup()->getArrow()->render(V, P, sp);
     cube.render(V, P, sp);
 
     if (player.checkpointReached())
@@ -329,7 +329,7 @@ int main(void)
 //----------------------------------------------------------------------------------------------------------------------
 	Car player;
     player.loadFromPath("BODY.obj", "wheel.obj",0.01,0.05 ,vec3(0.0f,0.0f,10.0f), 0.0f,0.0f,0.0f,1.0f);
-    player.getMarkup().loadMarkup(0.2);
+    player.getMarkup()->loadMarkup(0.2);
     Object cube;
     cube.loadFromPath("cube.obj", vec3(0.0f,-5000.0f,0.0f), 0.0f, 0.0f, 0.0f, 10000.0f);
 

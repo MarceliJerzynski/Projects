@@ -21,7 +21,7 @@ class Car
         vec3 getPosition();
         float getRotation();
         float getWheelRotation();
-        Markup getMarkup();
+        Markup * getMarkup();
         bool checkpointReached();
         void render(mat4 V, mat4 P, ShaderProgram *sp);
         void turn(float rot);
@@ -39,7 +39,7 @@ class Car
         bool goForward;
         bool goBackward;
         float wheelRotation;
-        Markup markup;
+        Markup *markup;
     private:
 };
 
