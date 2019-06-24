@@ -17,7 +17,7 @@ class Car
 {
     public:
         Car();
-        void loadFromPath(string pathBody,string pathWheel, string texPathBody, string texPathWheel, float apower, float abpower,vec3 aposition,
+        void loadFromPath(string pathBody,string pathChassis,string pathHeadlit,string pathLicense,string pathWheel, string texPathBody,string texPathChassis,string texPathheadlit,string texPathLicense, string texPathWheel, float apower, float abpower,vec3 aposition,
             float rotX, float rotY, float rotZ, float ascale);
         vec3 getPosition();
         float getRotation();
@@ -33,7 +33,7 @@ class Car
         void move(int going);   //0 - nie klika nic, 1 - trzyma W, 2 - trzyma S
         void AI();
     protected:
-        Object *body;
+        Object *body, *chassis, *headlit, *license;
         Object *FLW,*FRW,*RLW,*RRW;
         float Power;
         float backPower;

@@ -41,8 +41,9 @@ const float GREEN = 0.808;
 const float BLUE = 0.808;
 const char* title = "Racing Game";
 const int FPS = 60;
-const float max_angle = 90;
-const float changing_angle = 0.315;
+const int amount_of_trees = 10;
+const float max_angle = 10;
+const float changing_angle = 0.75;
 
 float distance_to_player = 9;
 float pitch_angle = 15;
@@ -138,7 +139,7 @@ void setCamera(mat4 &V, Car player)
 
 
 //Procedura rysująca zawartość sceny
-void drawScene(GLFWwindow* window,mat4 &V, mat4 &P, Object &cube, Car &player, Object tree[20], Car &enemy0) {
+void drawScene(GLFWwindow* window,mat4 &V, mat4 &P, Object &cube,Object &track, Car &player, Object tree[amount_of_trees], Car &enemy0) {
 
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     sp->use();
@@ -154,17 +155,19 @@ void drawScene(GLFWwindow* window,mat4 &V, mat4 &P, Object &cube, Car &player, O
 //----------------------------------------------------------------------------------------------------------------------
     player.render(V, P, sp);
     player.getMarkup()->getArrow()->render(V, P, sp);
-    cube.render(V, P, sp);
 
     enemy0.AI();
     enemy0.render(V, P, sp);
+
+    cube.render(V, P, sp);
+    track.render(V, P, sp);
 
     if (player.checkpointReached())
     {
         cout<<player.getRotation()<<endl;
     }
 
-    for(int i = 0 ; i < 10; i++)
+    for(int i = 0 ; i < amount_of_trees; i++)
     {
         tree[i].render(V, P, sp);
     }
@@ -204,9 +207,8 @@ void moving(mat4 &V,  Car &player)
             {
                 if ( speed_angle == 0)
                 angle_around_player -= changing_angle;
-                if ( angle_around_player < 0)
-                    camera_back = false;
             }
+        camera_back = false;
         } else
 	    if (turnRight) //i jednoczesnie D
         {
@@ -215,9 +217,8 @@ void moving(mat4 &V,  Car &player)
             {
                 if ( speed_angle == 0)
                 angle_around_player += changing_angle;
-                if (angle_around_player > 0)
-                    camera_back = false;
             }
+        camera_back = false;
         }
     } else
     if (player.isMoving() == -1)
@@ -229,9 +230,8 @@ void moving(mat4 &V,  Car &player)
             {
                 if ( speed_angle == 0)
                 angle_around_player += changing_angle;
-                if (angle_around_player > 0)
-                    camera_back = false;
             }
+            camera_back = false;
         } else
         if (turnRight)  //i jednoczesnie D
         {
@@ -240,9 +240,8 @@ void moving(mat4 &V,  Car &player)
             {
                 if ( speed_angle == 0)
                 angle_around_player -=  changing_angle;
-                if ( angle_around_player < 0)
-                    camera_back = false;
             }
+        camera_back = false;
         }
     }
 
@@ -330,24 +329,28 @@ int main(void)
 //Tworzenie obiektów
 //----------------------------------------------------------------------------------------------------------------------
 	Car player;
-    player.loadFromPath("BODY.obj", "wheel.obj","bricks.png","texWheel.png", 0.01,0.05 ,vec3(0.0f,1.0f,10.0f), 0.0f,0.0f,0.0f,1.0f);
+    player.loadFromPath("body.obj","chassis.obj","headlit.obj","license.obj", "wheel.obj","test.png","as3.png","s3cos.png","license.png","texWheel1.png", 0.01,0.05 ,vec3(13.0f,0.0f,10.0f), 0.0f,0.0f,0.0f,1.0f);
     player.getMarkup()->loadMarkup(0.2);
 
-    Car enemy0;
-    enemy0.loadFromPath("BODY.obj", "wheel.obj","tiger.png","texWheel.png", 0.005,0.05 ,vec3(0.0f,1.0f,10.0f), 0.0f,0.0f,0.0f,1.0f);
-    enemy0.getMarkup()->loadMarkup(0.2);
+    Object track;
+    track.loadFromPath("track.obj","tracktexture.png", vec3(0.0f,-2.0f,0.0f), -90.0f, 0.0f, 0.0f, 2.0f);
 
     Object cube;
-    cube.loadFromPath("cube.obj","bricks.png", vec3(0.0f,-5000.0f,0.0f), -90.0f, 0.0f, 0.0f, 10000.0f);
+    cube.loadFromPath("cube.obj","Grass.png", vec3(0.0f,-102.0f,0.0f), -90.0f, 0.0f, 0.0f, 200.0f);
+
+    Car enemy0;
+    enemy0.loadFromPath("body.obj","chassis.obj","headlit.obj","license.obj", "wheel.obj","test.png","as3.png","s3cos.png","license.png","texWheel1.png", 0.01,0.05 ,vec3(13.0f,0.0f,10.0f), 0.0f,0.0f,0.0f,1.0f);
+    enemy0.getMarkup()->loadMarkup(0.2);
+
 
     OBJLoader loader;
     loader.load("Tree.obj");
 
-    Object tree[10];
+    Object tree[amount_of_trees];
     int i = 0;
-    for(i = 0 ; i < 10; i++)
+    for(i = 0 ; i < amount_of_trees; i++)
     {
-        tree[i].loadFromLoader(loader,"bricks.png", vec3(0,0,-30*i), 0,0,0,2);
+        tree[i].loadFromLoader(loader,"bricks.png", vec3(0,-2,65-15*i), 0,0,0,2);
     }
 
 //----------------------------------------------------------------------------------------------------------------------
@@ -366,7 +369,7 @@ int main(void)
 	while (!glfwWindowShouldClose(window)) //Tak długo jak okno nie powinno zostać zamknięte
 	{
         glfwSetTime(0); //Zeruj timer
-		drawScene(window, V, P, cube, player, tree, enemy0); //Wykonaj procedurę rysującą
+		drawScene(window, V, P, cube,track, player, tree, enemy0); //Wykonaj procedurę rysującą
         moving(V, player);                                   //wykonaj procedurę odpowiajająca za poruszanie graczem oraz kamerą
 		glfwPollEvents();                                    //Wykonaj procedury callback w zalezności od zdarzeń jakie zaszły.
 		while(glfwGetTime() < 1/FPS) {}                      //Zapewnij stałe 60FPS

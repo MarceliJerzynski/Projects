@@ -1,8 +1,8 @@
 # depslib dependency file v1.0
-1561250038 source:c:\users\marceli\downloads\pl_szkielet06_win\pl_szkielet06_win\car.cpp
+1561400402 source:c:\users\marceli\downloads\pl_szkielet06_win\pl_szkielet06_win\car.cpp
 	"Car.h"
 
-1561248844 c:\users\marceli\downloads\pl_szkielet06_win\pl_szkielet06_win\car.h
+1561400358 c:\users\marceli\downloads\pl_szkielet06_win\pl_szkielet06_win\car.h
 	<GL/glew.h>
 	<GLFW/glfw3.h>
 	<glm/glm.hpp>
@@ -959,7 +959,7 @@
 	<iostream>
 	"lodepng.h"
 
-1561249322 source:c:\users\marceli\downloads\pl_szkielet06_win\pl_szkielet06_win\main_file.cpp
+1561401243 source:c:\users\marceli\downloads\pl_szkielet06_win\pl_szkielet06_win\main_file.cpp
 	<GL/glew.h>
 	<GLFW/glfw3.h>
 	<glm/glm.hpp>
