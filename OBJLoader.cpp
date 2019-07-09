@@ -28,7 +28,7 @@ void OBJLoader:: load(string path)
 
     if( file == NULL )
     {
-    cout<<"Couldn't load the file:" << path<<endl;
+        cout<<"Couldn't load the file:" << path<<endl;
     }
 
     else
@@ -85,9 +85,9 @@ void OBJLoader:: load(string path)
         }
 
 
-    verts = new float[order_verts.size()*4];
-    normals=new float[order_normals.size()*4];
-    colors =new float[order_colors.size()*2];
+        verts = new float[order_verts.size()*4];
+        normals=new float[order_normals.size()*4];
+        colors =new float[order_colors.size()*2];
 
         for( int i=0; i<order_verts.size(); i++ )
         {
@@ -99,7 +99,7 @@ void OBJLoader:: load(string path)
 
              verts[i*4+3] = not_nice_verts[((order_verts[i]-1)*4)+3];
 
- }
+        }
         for( int i=0; i<order_normals.size(); i++)
         {
              normals[i*4] = not_nice_normals[((order_normals[i]-1)*4)+0];
@@ -113,7 +113,6 @@ void OBJLoader:: load(string path)
              colors[i*2] = not_nice_colors[((order_colors[i]-1)*2)+0];
              colors[i*2+1] = not_nice_colors[((order_colors[i]-1)*2)+1];
         }
-
     }
     fclose(file);
 }

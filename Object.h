@@ -19,6 +19,7 @@ class Object
 {
     public:
         Object();
+        float getRadius();
         void loadFromPath(string path, string texturePath, vec3 position, float rotX, float rotY, float rotZ, float scale);
         void loadFromLoader(OBJLoader loader, string texturePath, vec3 position, float rotX, float rotY, float rotZ, float scale);
         mat4 getM();
@@ -53,7 +54,7 @@ class Object
         float rotationZ;
         float scaling;
         GLuint tex;
-
+        float radius;
     private:
 };
 

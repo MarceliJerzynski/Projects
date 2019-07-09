@@ -1,8 +1,8 @@
 # depslib dependency file v1.0
-1561400402 source:c:\users\marceli\downloads\pl_szkielet06_win\pl_szkielet06_win\car.cpp
+1561511916 source:c:\users\marceli\downloads\pl_szkielet06_win\pl_szkielet06_win\car.cpp
 	"Car.h"
 
-1561400358 c:\users\marceli\downloads\pl_szkielet06_win\pl_szkielet06_win\car.h
+1561511916 c:\users\marceli\downloads\pl_szkielet06_win\pl_szkielet06_win\car.h
 	<GL/glew.h>
 	<GLFW/glfw3.h>
 	<glm/glm.hpp>
@@ -924,7 +924,7 @@
 1559604224 c:\users\marceli\downloads\pl_szkielet06_win\pl_szkielet06_win\glm\gtc\type_ptr.inl
 	<cstring>
 
-1561245490 c:\users\marceli\downloads\pl_szkielet06_win\pl_szkielet06_win\object.h
+1561494090 c:\users\marceli\downloads\pl_szkielet06_win\pl_szkielet06_win\object.h
 	<GL/glew.h>
 	<GLFW/glfw3.h>
 	<glm/glm.hpp>
@@ -959,25 +959,27 @@
 	<iostream>
 	"lodepng.h"
 
-1561401243 source:c:\users\marceli\downloads\pl_szkielet06_win\pl_szkielet06_win\main_file.cpp
+1561512075 source:c:\users\marceli\downloads\pl_szkielet06_win\pl_szkielet06_win\main_file.cpp
 	<GL/glew.h>
 	<GLFW/glfw3.h>
 	<glm/glm.hpp>
 	<glm/gtc/type_ptr.hpp>
+	<cmath>
 	"constants.h"
 	"lodepng.h"
 	"shaderprogram.h"
 	"Object.h"
 	"Car.h"
 	"OBJLoader.h"
-	"Markup.h"
+	"Track.h"
+	<windows.h>
 
 1559604218 c:\users\marceli\downloads\pl_szkielet06_win\pl_szkielet06_win\constants.h
 
-1561245474 source:c:\users\marceli\downloads\pl_szkielet06_win\pl_szkielet06_win\object.cpp
+1561511309 source:c:\users\marceli\downloads\pl_szkielet06_win\pl_szkielet06_win\object.cpp
 	"Object.h"
 
-1561245657 source:c:\users\marceli\downloads\pl_szkielet06_win\pl_szkielet06_win\objloader.cpp
+1561492505 source:c:\users\marceli\downloads\pl_szkielet06_win\pl_szkielet06_win\objloader.cpp
 	"OBJLoader.h"
 
 1559604218 source:c:\users\marceli\downloads\pl_szkielet06_win\pl_szkielet06_win\shaderprogram.cpp
@@ -996,6 +998,17 @@
 	<iostream>
 	<vector>
 
-1561247753 source:c:\users\marceli\downloads\pl_szkielet06_win\pl_szkielet06_win\markup.cpp
+1561509805 source:c:\users\marceli\downloads\pl_szkielet06_win\pl_szkielet06_win\markup.cpp
 	"Markup.h"
+
+1561494729 source:c:\users\marceli\downloads\pl_szkielet06_win\pl_szkielet06_win\track.cpp
+	"Track.h"
+
+1561494729 c:\users\marceli\downloads\pl_szkielet06_win\pl_szkielet06_win\track.h
+	<GL/glew.h>
+	<GLFW/glfw3.h>
+	<glm/glm.hpp>
+	<glm/gtc/type_ptr.hpp>
+	<glm/gtc/matrix_transform.hpp>
+	"Object.h"
 

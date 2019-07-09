@@ -45,13 +45,27 @@ void Car::loadFromPath(string pathBody,string pathChassis,string pathHeadlit,str
     temporaryPower = 0;
     backPower = abpower;
     v = 0;
-    a = 0;
+    acceleration = 0;
     goForward = false;
     goBackward = false;
     wheelRotation = rotZ;
 //----------------------------------------------------------------------------------------------------------------------
 }
 
+Object * Car::getBody()
+{
+    return body;
+}
+
+void Car::setV(float av)
+{
+    v = av;
+}
+
+float Car::getV()
+{
+    return v;
+}
 vec3 Car::getPosition()
 {
     return body->getPosition();
@@ -156,13 +170,20 @@ void Car::move(int going)
     }
 
 
-    a = temporaryPower - resistance;
-    v = v + a/60;
+    acceleration = temporaryPower - resistance;
+    v = v + acceleration/60;
     float s = v;
+
+    float x1,x2,y1,y2;
+    x1 = body->getPosition().x;
+    y1 = body->getPosition().z;
     body->move(s);
     chassis->move(s);
     license->move(s);
     headlit->move(s);
+
+    x2 = body->getPosition().x;
+    y2 = body->getPosition().z;
 
     vec3 aposition;
     aposition.x = 0.786 * cos(-body->getRotationY()) - 1.257*sin(-body->getRotationY()) + body->getPosition().x;
@@ -198,11 +219,29 @@ RLW->rotateX(-v*100);
 RRW->rotateX(-v*100);
 
 //----------------------------------------------------------------------------------------------------------------------
+
+
+//obliczanie prostej
+//----------------------------------------------------------------------------------------------------------------------
+
+//----------------------------------------------------------------------------------------------------------------------
 }
 
 float Car::getRotation()
 {
     return body->getRotationY();
+}
+
+void Car::setRotation(float rotX, float rotY, float rotZ)
+{
+    body->setRotation(rotX, rotY, rotZ);
+    headlit->setRotation(rotX, rotY, rotZ);
+    license->setRotation(rotX, rotY, rotZ);
+    chassis->setRotation(rotX, rotY, rotZ);
+    FLW->setRotation(rotX, rotY, rotZ);
+    FRW->setRotation(rotX, rotY - 180, rotZ);
+    RRW->setRotation(rotX, rotY - 180, rotZ);
+    RLW->setRotation(rotX, rotY, rotZ);
 }
 
 float Car::getWheelRotation()
@@ -241,17 +280,36 @@ void Car::render(mat4 V, mat4 P, ShaderProgram *sp)
 
 void Car::AI()
 {
-    move(1); //rusz do przodu
-    float a = tan(body->getRotationY());
-    float b = body->getPosition().z - a*body->getPosition().x;
-    if (markup->getPosition().z < a*body->getPosition().x + b )
-    {
-        turnLeft();
-        turnWheelLeft();
-    } else
-    {
-        turnRight();
-        turnWheelRight();
+    float deltax =atan2((markup->getPosition().z- body->getPosition().z ),( markup->getPosition().x-body->getPosition().x))+3.14;
+    float angle=abs(fmod(body->getRotationY()+1.57-6.28*100,6.28));
+    if(temporaryPower>0.3)
+    {move(0);}
+    else
+    {move(1);
     }
-
+    if(angle>deltax  && angle-deltax>0.1)
+    {
+        if(angle>5 && deltax<2)
+        {
+            turnRight();
+            turnWheelRight();
+        }
+        else
+        {
+            turnLeft();
+           turnWheelLeft();
+        }
+    }
+    if(angle<deltax && deltax-angle>0.1)
+    {
+        if(deltax>5 && angle<2)
+        {
+            turnLeft();
+            turnWheelLeft();
+        }else
+        {
+             turnRight();
+            turnWheelRight();
+        }
+    }
 }

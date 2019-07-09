@@ -19,8 +19,12 @@ class Car
         Car();
         void loadFromPath(string pathBody,string pathChassis,string pathHeadlit,string pathLicense,string pathWheel, string texPathBody,string texPathChassis,string texPathheadlit,string texPathLicense, string texPathWheel, float apower, float abpower,vec3 aposition,
             float rotX, float rotY, float rotZ, float ascale);
+        Object * getBody();
+        void setV(float av);
+        float getV();
         vec3 getPosition();
         float getRotation();
+        void setRotation(float rotX, float rotY, float rotZ);
         float getWheelRotation();
         Markup * getMarkup();
         bool checkpointReached();
@@ -39,7 +43,7 @@ class Car
         float backPower;
         float temporaryPower;
         float v;
-        float a;
+        float acceleration;
         bool goForward;
         bool goBackward;
         float wheelRotation;

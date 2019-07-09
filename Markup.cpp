@@ -6,16 +6,14 @@ Markup::Markup()
 
 void Markup::loadMarkup( float scale)
 {
-    track.push_back(vec3(0, 0, -15));
-    track.push_back(vec3(0, 0, -45));
-    track.push_back(vec3(0, 0, -75));
-    track.push_back(vec3(0, 0, -105));
-    track.push_back(vec3(0, 0, -135));
-    track.push_back(vec3(0, 0, -165));
-    track.push_back(vec3(0, 0, -195));
-    track.push_back(vec3(0, 0, -225));
-    track.push_back(vec3(0, 0, -255));
-    track.push_back(vec3(0, 0, -285));
+    track.push_back(vec3(25.0f,0.0f,-60.0f));
+    track.push_back(vec3(5, 0, -80));
+    track.push_back(vec3(-12, 0, -78));
+    track.push_back(vec3(-25, 0, -60));
+    track.push_back(vec3(-26, 0, 47));
+    track.push_back(vec3(-10, 0, 80));
+    track.push_back(vec3(25, 0, 60));
+    track.push_back(vec3(25.0f,0.0f,-10.0f));
 
 
     arrow = new Object();
@@ -33,15 +31,15 @@ Object *Markup::getArrow()
 
 void Markup::touched()
 {
-        if (index == track.size() - 1)  //koniec wycisgu
+        if (index == track.size()-1)  //koniec wycisgu
         {
-            cout<<"KONIEC WYŒCIGU!";
+            index = 0;
+            changePosition(track[index]);
         }
         else
         {
             index++;
             changePosition(track[index]);
-                cout<<"Index = "<<index<<endl;
         }
 }
 

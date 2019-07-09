@@ -24,30 +24,33 @@ Place, Fifth Floor, Boston, MA  02110 - 1301  USA
 #include <GLFW/glfw3.h>
 #include <glm/glm.hpp>
 #include <glm/gtc/type_ptr.hpp>
-
+#include <cmath>
 #include "constants.h"
 #include "lodepng.h"
 #include "shaderprogram.h"
 #include "Object.h"
 #include "Car.h"
 #include "OBJLoader.h"
-#include "Markup.h"
+#include "Track.h"
+#include <windows.h>
 using namespace glm;
 using namespace std;
-const int WIDTH = 800;
-const int HEIGHT= 800;
-const float RED =  0.529;
-const float GREEN = 0.808;
-const float BLUE = 0.808;
+const  int WIDTH = 800;
+const  int HEIGHT= 800;
+const  float RED =  0.529;
+const  float GREEN = 0.808;
+const  float BLUE = 0.808;
 const char* title = "Racing Game";
-const int FPS = 60;
-const int amount_of_trees = 10;
-const float max_angle = 10;
-const float changing_angle = 0.75;
+const  int FPS = 60;
+const  int amount_of_trees = 10;
+const  int amount_of_lights = 4;
+const  float max_angle = 10;
+const  float changing_angle = 0.75;
+const  int enemyCount =4;
 
 float distance_to_player = 9;
 float pitch_angle = 15;
-float yaw_angle = 0;
+//float yaw_angle = 0;
 
 
 float angle_around_player = 0;
@@ -62,6 +65,26 @@ bool goPlayer = false;
 bool backPlayer=false;
 
 ShaderProgram *sp;
+
+
+bool collision(Car &car, Object &object)
+{
+    if ( pow(car.getBody()->getRadius() - object.getRadius(), 2) <
+        pow(car.getBody()->getPosition().x - object.getPosition().x, 2) +
+        pow(car.getBody()->getPosition().z - object.getPosition().z, 2)
+        )
+    {
+        if ( pow(car.getBody()->getRadius() + object.getRadius(), 2) >
+            pow(car.getBody()->getPosition().x - object.getPosition().x, 2) +
+            pow(car.getBody()->getPosition().z - object.getPosition().z, 2)
+             )
+                {
+                    return true;
+                }
+    }
+
+    return false;
+}
 
 float toRadians(float angle)
 {
@@ -139,15 +162,22 @@ void setCamera(mat4 &V, Car player)
 
 
 //Procedura rysująca zawartość sceny
-void drawScene(GLFWwindow* window,mat4 &V, mat4 &P, Object &cube,Object &track, Car &player, Object tree[amount_of_trees], Car &enemy0) {
+void drawScene(GLFWwindow* window,mat4 &V, mat4 &P, Object &cube,Object &track, Car &player, Object tree[amount_of_trees], Car *enemy) {
 
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     sp->use();
 
 //Swiatla
 //----------------------------------------------------------------------------------------------------------------------
-    vec3 light_position = vec3(0,500,0);
-    glUniform4f(sp->u("lp"),light_position.x,light_position.y,light_position.z,1); //Współrzędne źródła światła
+
+   float light_position[] = {
+    0, 10, -10, 1,
+    0, 10000, 0, 1,
+    0, 10000, 10, 1,
+    0, 10000,20, 1
+    };
+
+    glUniform4fv(sp->u("lp"), amount_of_lights, light_position);
 //----------------------------------------------------------------------------------------------------------------------
 
 
@@ -156,27 +186,26 @@ void drawScene(GLFWwindow* window,mat4 &V, mat4 &P, Object &cube,Object &track, 
     player.render(V, P, sp);
     player.getMarkup()->getArrow()->render(V, P, sp);
 
-    enemy0.AI();
-    enemy0.render(V, P, sp);
+
+    for(int i=0;i<enemyCount;i++)
+    {
+    enemy[i].render(V, P, sp);
+    }
 
     cube.render(V, P, sp);
     track.render(V, P, sp);
 
     if (player.checkpointReached())
     {
-        cout<<player.getRotation()<<endl;
+        Beep(1000, 200);
     }
 
     for(int i = 0 ; i < amount_of_trees; i++)
     {
         tree[i].render(V, P, sp);
     }
-//----------------------------------------------------------------------------------------------------------------------
 
-//   if ( markup.touched(player))
- //   {
-  //     markup.changePosition(vec3(0,0,markup.getPosition().z-10));
- //   }
+//----------------------------------------------------------------------------------------------------------------------
 
 
     glfwSwapBuffers(window); //Przerzuć tylny bufor na przedni
@@ -185,18 +214,6 @@ void drawScene(GLFWwindow* window,mat4 &V, mat4 &P, Object &cube,Object &track, 
 void moving(mat4 &V,  Car &player)
 {
     bool camera_back = true;
-    if (goPlayer)       //jesli trzyma W
-    {
-        player.move(1);  //rusz gracza
-    } else
-    if (backPlayer)     //jesli trzyma S
-    {
-        player.move(2);
-    } else
-    {
-        player.move(0);
-    }
-
     //obsluga kamery przy poruszaniu sie
     if (player.isMoving() == 1)
     {
@@ -283,10 +300,71 @@ void moving(mat4 &V,  Car &player)
             }
         }
 
+     if (goPlayer)       //jesli trzyma W
+    {
+        player.move(1);  //rusz gracza
+    } else
+    if (backPlayer)     //jesli trzyma S
+    {
+        player.move(2);
+    } else
+    {
+        player.move(0);
+    }
+
+
+
     setCamera(V, player);
 
 }
 
+
+void game( Object &cube, Object &track,Car &player,Object tree[amount_of_trees], Car *enemy)
+
+{
+
+    float help;
+
+    for(int i=0;i<enemyCount;i++)
+    {
+    enemy[i].AI();
+    enemy[i].checkpointReached();
+    }
+
+    for(int i = 0 ; i < amount_of_trees; i++)   //kolizja z drzewami
+    {
+        if ( collision(player, tree[i])   )
+        {
+
+            player.setV(-0.2);
+        }
+    }
+
+    for(int i = 0 ; i < enemyCount; i++)
+    {
+        if ( collision(player, *enemy[i].getBody() )  ) //kolizja gracza z enemy
+        {
+            help = player.getV();
+            player.setV( enemy[i].getV() );
+            enemy[i].setV(help);
+        }
+    }
+
+    for(int i = 0; i < enemyCount -1; i++)
+    {
+        for(int j = 0; j < enemyCount -1; j++)
+        {
+            if ( collision( enemy[j], *enemy[j+1].getBody()))   //kolizja enemy z enemy
+            {
+            help = enemy[j].getV();
+            enemy[j].setV( enemy[j+1].getV() );
+            enemy[j+1].setV(help);
+            }
+        }
+    }
+
+
+}
 GLFWwindow* openGlstuff()
 {
     GLFWwindow* window;
@@ -320,6 +398,7 @@ GLFWwindow* openGlstuff()
 	return window;
 }
 
+
 int main(void)
 {
 	GLFWwindow* window; //Wskaźnik na obiekt reprezentujący okno
@@ -328,19 +407,29 @@ int main(void)
 
 //Tworzenie obiektów
 //----------------------------------------------------------------------------------------------------------------------
-	Car player;
-    player.loadFromPath("body.obj","chassis.obj","headlit.obj","license.obj", "wheel.obj","test.png","as3.png","s3cos.png","license.png","texWheel1.png", 0.01,0.05 ,vec3(13.0f,0.0f,10.0f), 0.0f,0.0f,0.0f,1.0f);
-    player.getMarkup()->loadMarkup(0.2);
-
     Object track;
     track.loadFromPath("track.obj","tracktexture.png", vec3(0.0f,-2.0f,0.0f), -90.0f, 0.0f, 0.0f, 2.0f);
+
 
     Object cube;
     cube.loadFromPath("cube.obj","Grass.png", vec3(0.0f,-102.0f,0.0f), -90.0f, 0.0f, 0.0f, 200.0f);
 
-    Car enemy0;
-    enemy0.loadFromPath("body.obj","chassis.obj","headlit.obj","license.obj", "wheel.obj","test.png","as3.png","s3cos.png","license.png","texWheel1.png", 0.01,0.05 ,vec3(13.0f,0.0f,10.0f), 0.0f,0.0f,0.0f,1.0f);
-    enemy0.getMarkup()->loadMarkup(0.2);
+    Car *enemy=new Car[enemyCount];
+
+    for(int i=0;i<enemyCount;i = i + 2)
+    {
+    enemy[i].loadFromPath("body.obj","chassis.obj","headlit.obj","license.obj", "wheel.obj","test.png","as3.png","s3cos.png","license.png","texWhee1.png", 0.01,0.05 ,vec3(25.0f,0.0f,0-5.0f*i), 0.0f,0.0f,0.0f,1.0f);
+    enemy[i].getMarkup()->loadMarkup(0.2);
+    }
+    for(int i=1;i<enemyCount;i = i + 2)
+    {
+    enemy[i].loadFromPath("body.obj","chassis.obj","headlit.obj","license.obj", "wheel.obj","test.png","as3.png","s3cos.png","license.png","texWhee1.png", 0.01,0.05 ,vec3(30.0f,0.0f,0-5.0f*(i-1)), 0.0f,0.0f,0.0f,1.0f);
+    enemy[i].getMarkup()->loadMarkup(0.2);
+    }
+
+    Car player;
+    player.loadFromPath("body.obj","chassis.obj","headlit.obj","license.obj", "wheel.obj","test.png","as3.png","s3cos.png","license.png","texWhee1.png", 0.01,0.05 ,vec3(25.0f,0.0f,10.0f), 0.0f,0.0f,0.0f,1.0f);
+    player.getMarkup()->loadMarkup(0.2);
 
 
     OBJLoader loader;
@@ -369,8 +458,9 @@ int main(void)
 	while (!glfwWindowShouldClose(window)) //Tak długo jak okno nie powinno zostać zamknięte
 	{
         glfwSetTime(0); //Zeruj timer
-		drawScene(window, V, P, cube,track, player, tree, enemy0); //Wykonaj procedurę rysującą
+		drawScene(window, V, P, cube,track, player, tree, enemy); //Wykonaj procedurę rysującą
         moving(V, player);                                   //wykonaj procedurę odpowiajająca za poruszanie graczem oraz kamerą
+        game(cube,track, player, tree, enemy);
 		glfwPollEvents();                                    //Wykonaj procedury callback w zalezności od zdarzeń jakie zaszły.
 		while(glfwGetTime() < 1/FPS) {}                      //Zapewnij stałe 60FPS
 	}

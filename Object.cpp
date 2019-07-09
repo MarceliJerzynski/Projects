@@ -2,6 +2,12 @@
 
 Object::Object()
 {
+    radius = 0.4;
+}
+
+float Object::getRadius()
+{
+    return radius;
 }
 
 void Object::loadFromPath(string path, string texturePath,vec3 aposition, float rotX, float rotY, float rotZ, float ascale)
@@ -33,7 +39,6 @@ mat4 Object::getM()
     return M;
 }
 
-
 float * Object::getVerts()
 {
     return verts;
@@ -46,6 +51,7 @@ float * Object::getNormals()
 
 float * Object::getColors()
 {
+
     return colors;
 }
 unsigned int Object::getVertexCount()
@@ -77,6 +83,7 @@ void Object::move(float dc)
     position.z+=dz;
     setM(position, rotationX, rotationY, rotationZ, scaling);
 }
+
 float Object::getRotationY()
 {
     return (rotationY-180)*3.14f/180.0f;
@@ -145,12 +152,12 @@ void Object::setM(vec3 aposition, float rotX, float rotY, float rotZ, float asca
     rotationX = rotX;
     rotationZ = rotZ;
     scaling=ascale;
+    radius = 1.5 * ascale;
 }
 
 void Object:: rotateX(float angle)
 {
     rotationX += angle;
-   // M = rotate(M, rotationX*3.14f/180.0f, vec3(1.0f, 0.0f, 0.0f));
    setM(position, rotationX, rotationY,rotationZ, scaling);
 }
 

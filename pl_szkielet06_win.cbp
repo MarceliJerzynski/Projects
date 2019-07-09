@@ -56,6 +56,8 @@
 		<Unit filename="OBJLoader.h" />
 		<Unit filename="Object.cpp" />
 		<Unit filename="Object.h" />
+		<Unit filename="Track.cpp" />
+		<Unit filename="Track.h" />
 		<Unit filename="constants.h" />
 		<Unit filename="fragment.glsl" />
 		<Unit filename="lodepng.cpp" />
